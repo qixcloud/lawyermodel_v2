@@ -1,0 +1,7 @@
+{
+  "imagesPath": "src/content/images",
+  "assetsPath": "src/content/images",
+  "iconFileName": "loading1",
+  "backgroundColor": "#323369",
+  "resizeMode": "contain"
+}

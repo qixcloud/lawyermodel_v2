@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>qix.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1.0.2</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>583697754B247FCF8408A6410D0C715C5BBA6462</string>
+				<key>dateExpires</key>
+				<string>24/4/24</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>embeddedBinaries</key>
+			<array>
+				<dict>
+					<key>architectures</key>
+					<array>
+						<string>arm64</string>
+					</array>
+					<key>buildNumber</key>
+					<string>0.11.0</string>
+					<key>certificate</key>
+					<dict>
+						<key>SHA1</key>
+						<string>583697754B247FCF8408A6410D0C715C5BBA6462</string>
+						<key>dateExpires</key>
+						<string>24/4/24</string>
+						<key>type</key>
+						<string>Apple Development</string>
+					</dict>
+					<key>name</key>
+					<string>hermes.framework</string>
+					<key>team</key>
+					<dict>
+						<key>id</key>
+						<string>W8Z6FSP54H</string>
+						<key>name</key>
+						<string>Erik Hyndman</string>
+					</dict>
+					<key>versionNumber</key>
+					<string>0.11.0</string>
+				</dict>
+			</array>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>W8Z6FSP54H.com.qixcloud.lawyermodel</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.in-app-payments</key>
+				<array/>
+				<key>com.apple.developer.team-identifier</key>
+				<string>W8Z6FSP54H</string>
+				<key>get-task-allow</key>
+				<true/>
+			</dict>
+			<key>name</key>
+			<string>qix.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>a92194a2-7a87-4893-869b-0318ed91a40f</string>
+				<key>dateExpires</key>
+				<string>5/6/24</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.qixcloud.lawyermodel</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>W8Z6FSP54H</string>
+				<key>name</key>
+				<string>Erik Hyndman</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.0.2</string>
+		</dict>
+	</array>
+</dict>
+</plist>

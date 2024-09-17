@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "744619556853",
+    "project_id": "lawyermodel-520a1",
+    "storage_bucket": "lawyermodel-520a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:a13abad25aeabffe946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.lawyermodel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-c3g3qppnjnioi562e5sonhljq0a9b8o9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-c3g3qppnjnioi562e5sonhljq0a9b8o9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-qlibq5mfk13f01g9p07u24ajshk085ce.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

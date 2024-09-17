@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>qix.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>armv7</string>
+				<string>arm64</string>
+			</array>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>9B8D48B92A784BE5CD0E0572B0670DF6904B61C1</string>
+				<key>dateExpires</key>
+				<string>06/05/2021</string>
+				<key>type</key>
+				<string>Apple Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>W8Z6FSP54H.com.qixcloud.hyndman</string>
+				<key>aps-environment</key>
+				<string>production</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>W8Z6FSP54H</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>qix.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>96642aed-0e24-4567-b427-dc3382e8c063</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: com.qixcloud.hyndman</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>W8Z6FSP54H</string>
+				<key>name</key>
+				<string>Erik Hyndman</string>
+			</dict>
+		</dict>
+	</array>
+</dict>
+</plist>
