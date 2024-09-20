@@ -100,6 +100,7 @@ export default class Dashboard extends Component {
       footerIcon1: "",
       footerIcon2: "",
       footerIcon3: "",
+      bottomVisible: 0,
       colorTop: "#eef2f5",
       colorBody: "#eef2f5",
       colorBottom: "#a8c6f5",
@@ -187,23 +188,23 @@ export default class Dashboard extends Component {
       console.log("link", res.data.link);
       this.setState({ facebookLink: res.data.link });
     });
-    this.getSocialLinks();
+    // this.getSocialLinks();
 
-    console.log("business start");
-    axios({
-      method: "post",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      url:
-        global.baseUrl + "wp-admin/admin-ajax.php?action=getBusinessInfoForApp",
-      //data: params
-    }).then((res) => {
-      console.log("business", res.data);
-      this.setState({ businessAddress: res.data.location });
-      this.setState({ businessEmail: res.data.company_email });
-      this.setState({ businessPhone: res.data.company_phone });
-    });
+    // console.log("business start");
+    // axios({
+    //   method: "post",
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    //   url:
+    //     global.baseUrl + "wp-admin/admin-ajax.php?action=getBusinessInfoForApp",
+    //   //data: params
+    // }).then((res) => {
+    //   console.log("business", res.data);
+    //   this.setState({ businessAddress: res.data.location });
+    //   this.setState({ businessEmail: res.data.company_email });
+    //   this.setState({ businessPhone: res.data.company_phone });
+    // });
   }
   fetchCalendarEvents = async (projectIdProp) => {
     const date = new Date();
@@ -264,6 +265,10 @@ export default class Dashboard extends Component {
       userAvatar: dashboardData.icons.userAvatar,
     });
     this.setState({
+      bottomVisible: dashboardData.bottomVisible,
+    });
+    console.log("bottomVisible", dashboardData.bottomVisible);
+    this.setState({
       footerIcon1: dashboardData.icons.footerIcon1,
     });
     this.setState({
@@ -272,6 +277,15 @@ export default class Dashboard extends Component {
     this.setState({
       footerIcon3: dashboardData.icons.footerIcon3,
     });
+    this.setState({ businessAddress: dashboardData.business_address });
+    this.setState({ businessEmail: dashboardData.business_email });
+    this.setState({ businessPhone: dashboardData.business_phone });
+    this.setState({ fb: dashboardData.business_facebook });
+    // this.setState({ twitter: dashboardData.twitter });
+    this.setState({ insta: dashboardData.business_instagram });
+    // this.setState({ youtube: dashboardData.youtube });
+    // this.setState({ linkedin: dashboardData.linkedin });
+
     // if (global.lang === "en") {
     //   const data = [
     //     require("../assets/sliders/home/Artboard1.jpg"),
@@ -923,7 +937,7 @@ export default class Dashboard extends Component {
                                           )
                                         )}
                                     </ScrollView>
-                                    {this.state.DashboardItems && (
+                                    {this.state.bottomVisible == 1 && (
                                       <View
                                         style={{
                                           flexDirection: "row",
