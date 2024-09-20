@@ -75,6 +75,7 @@ export default class Login extends Component {
       this.setState({ signed: 0 });
     }
     const jwt = await AsyncStorage.getItem("jwtToken");
+    console.log("jwt", jwt);
     if (jwt) {
       await this.checkUserHasCases(jwt);
     } else {

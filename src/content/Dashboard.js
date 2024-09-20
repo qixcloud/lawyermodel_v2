@@ -982,7 +982,7 @@ export default class Dashboard extends Component {
                                           )}
                                         </TouchableOpacity>
                                         <TouchableOpacity
-                                          onPress={() => this.gotoChat()}
+                                          onPress={() => this.gotoMenuItem(2)}
                                           style={{
                                             flexDirection: "row",
                                             justifyContent: "center",
