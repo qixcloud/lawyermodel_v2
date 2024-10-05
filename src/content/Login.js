@@ -32,6 +32,7 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import ImageOrSvg from "./dashboardBlocks/imageOrSvg";
 import { appId, getHeaders, getDashboardItems } from "./Helper";
 import { color } from "react-native-reanimated";
+import * as Progress from "react-native-progress";
 let uniqueId = DeviceInfo.getUniqueId();
 
 const mockProjectId = JSON.stringify([156794, 75073]);
@@ -62,11 +63,13 @@ export default class Login extends Component {
       logo: "",
       colorTop: "#2e3643",
       colorBody: "#2e3643",
+      loaded: false,
+      logoLoaded: false,
     };
     global.apps = [];
   }
   componentDidMount = async () => {
-    console.log("MOUNTTT");
+    // console.log("MOUNTTT");
     this.getSliderItems();
     if (this.props.phoneNumber != "") {
       this.checkLogin("");
@@ -75,7 +78,7 @@ export default class Login extends Component {
       this.setState({ signed: 0 });
     }
     const jwt = await AsyncStorage.getItem("jwtToken");
-    console.log("jwt", jwt);
+
     if (jwt) {
       await this.checkUserHasCases(jwt);
     } else {
@@ -93,6 +96,8 @@ export default class Login extends Component {
     this.setState({
       logo: dashboardItems.icons.app,
     });
+
+    this.setState({ loaded: true });
     /*
     if (global.lang === "en") {
       const data = [
@@ -111,7 +116,9 @@ export default class Login extends Component {
     }
       */
   };
-
+  handleLoaded = () => {
+    this.setState({ logoLoaded: true });
+  };
   getToken = async () => {
     //get the messeging token
     const token = await messaging().getToken();
@@ -437,7 +444,7 @@ export default class Login extends Component {
     this.setState({ inputPhone: "" });
   };
   gotoSite = () => {
-    Linking.openURL(global.baseUrl);
+    Linking.openURL(global.mainUrl);
   };
   nextLoginStep = (step) => {
     this.setState({ signinStep: step });
@@ -625,322 +632,363 @@ export default class Login extends Component {
                           <>
                             {!this.state.signed && (
                               <>
-                                <ScrollView
-                                  style={[
-                                    styles.container,
-                                    {
-                                      backgroundColor:
-                                        this.state.colorBody || "#2e3643",
-                                    },
-                                  ]}
-                                >
-                                  <View
-                                    style={{
-                                      flexDirection: "row",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      padding: 20,
-                                      marginBottom: 20,
-                                      backgroundColor:
-                                        this.state.colorTop || "#2e3643",
-                                    }}
-                                  >
-                                    <View
-                                    // onPress={() => this.gotoSite()}
-                                    >
-                                      {this.state.logo && (
-                                        <ImageOrSvg
-                                          height="50"
-                                          uri={this.state.logo} // Remote SVG URL
+                                {this.state.loaded && (
+                                  <>
+                                    {!this.state.logoLoaded && (
+                                      <View
+                                        style={[
+                                          styles.container,
+                                          {
+                                            height: "100%",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            backgroundColor:
+                                              this.state.colorBody || "#2e3643",
+                                            position: "absolute",
+                                            width: "100%",
+                                            zIndex: 1,
+                                          },
+                                        ]}
+                                      >
+                                        <Progress.Circle
+                                          size={30}
+                                          indeterminate={true}
                                         />
-                                      )}
-                                    </View>
-                                    <View>
-                                      <Text
-                                        style={{
-                                          fontFamily: "Quicksand-Bold",
-                                          fontSize: 25,
-                                          color: "#afbec5",
-                                          textAlign: "right",
-                                        }}
-                                      >
-                                        {this.props.translate("login")}
-                                      </Text>
-                                    </View>
-                                  </View>
-                                  {this.state.viewCarousel ? (
-                                    <View>
-                                      <Carousel
-                                        layout={"default"}
-                                        loop={true}
-                                        autoplay={true}
-                                        scrollEnabled={true}
-                                        autoplayInterval={5000}
-                                        ref={(ref) => (this.carousel = ref)}
-                                        data={this.state.sliderItems}
-                                        renderItem={this._renderItem}
-                                        sliderWidth={
-                                          Dimensions.get("window").width
-                                        }
-                                        itemWidth={
-                                          Dimensions.get("window").width
-                                        }
-                                        onSnapToItem={(index) =>
-                                          this.setState({ activeIndex: index })
-                                        }
-                                      />
-                                      {this.pagination}
-                                    </View>
-                                  ) : (
-                                    <View
-                                      style={{
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                      }}
-                                    >
-                                      <ScalableImage
-                                        source={require("./images/skeleton.gif")}
-                                        width={Dimensions.get("window").width}
-                                      />
-                                    </View>
-                                  )}
-                                  {/* <View style={{justifyContent: 'center', alignItems: 'center'}}>
-								<ScalableImage source={require('./images/erikhyndman_without-loop.gif')} width={250} />
-							</View> */}
-                                  {/* <View style={styles.title}>
-								<Text allowFontScaling={false} style={{ fontFamily: 'Quicksand-Regular',textAlign: 'right', fontSize: 25, color: '#333', marginBottom: 10 }}>{global.title}</Text>
-							</View> */}
-                                  {this.state.signinStep == 1 ? (
-                                    <KeyboardAvoidingView
-                                      behavior="position"
-                                      keyboardVerticalOffset={
-                                        keyboardVerticalOffset
-                                      }
-                                      style={{
-                                        justifyContent: "center",
-                                        marginTop: 0,
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <View
-                                        style={{
-                                          width:
-                                            Dimensions.get("window").width *
-                                            0.8,
-                                          padding: 30,
-                                        }}
-                                      >
-                                        {/* <Text style={{ fontFamily: 'Quicksand-Regular',fontSize: 25, color: '#fff', textAlign: "center", marginBottom: 15}}>{this.props.translate("enterDetails")}</Text> */}
-                                        <TouchableOpacity
-                                          onPress={() => this.nextLoginStep(2)}
-                                          style={styles.button}
-                                        >
-                                          <Text
-                                            style={{
-                                              fontFamily: "Quicksand-Regular",
-                                              textAlign: "center",
-                                              fontSize: 25,
-                                              color: "#fff",
-                                            }}
-                                          >
-                                            {this.props.translate("signin")}
-                                          </Text>
-                                        </TouchableOpacity>
                                       </View>
+                                    )}
+                                    <ScrollView
+                                      style={[
+                                        styles.container,
+                                        {
+                                          backgroundColor:
+                                            this.state.colorBody || "#2e3643",
+                                        },
+                                      ]}
+                                    >
                                       <View
                                         style={{
-                                          width:
-                                            Dimensions.get("window").width *
-                                            0.8,
-                                          marginTop: 0,
+                                          flexDirection: "row",
+                                          justifyContent: "space-between",
+                                          alignItems: "center",
+                                          padding: 20,
+                                          marginBottom: 20,
+                                          backgroundColor:
+                                            this.state.colorTop || "#2e3643",
                                         }}
                                       >
                                         <TouchableOpacity
-                                          onPress={() =>
-                                            this.props.gotoSignUp()
-                                          }
+                                          onPress={() => this.gotoSite()}
                                         >
-                                          <Text
-                                            style={{
-                                              fontFamily: "Quicksand-Regular",
-                                              fontSize: 20,
-                                              color: "#fff",
-                                              marginBottom: 15,
-                                              textAlign: "center",
-                                              backgroundColor: "#2e3643",
-                                              padding: 7,
-                                              borderRadius: 5,
-                                            }}
-                                          >
-                                            {this.props.translate(
-                                              "donthaveanaccount"
-                                            )}
-                                          </Text>
-                                        </TouchableOpacity>
-                                      </View>
-                                    </KeyboardAvoidingView>
-                                  ) : (
-                                    <KeyboardAvoidingView
-                                      behavior="position"
-                                      keyboardVerticalOffset={
-                                        keyboardVerticalOffset
-                                      }
-                                      style={{
-                                        justifyContent: "center",
-                                        marginTop: 0,
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <View
-                                        style={{
-                                          width:
-                                            Dimensions.get("window").width *
-                                            0.8,
-                                          padding: 30,
-                                        }}
-                                      >
-                                        <View style={{ paddingTop: 0 }}>
-                                          <View
-                                            style={[
-                                              styles.input,
-                                              {
-                                                flexDirection: "row",
-                                                justifyContent: "space-between",
-                                                width: "100%",
-                                              },
-                                            ]}
-                                          >
-                                            <TextInput
-                                              value={this.state.countryCode}
-                                              onChangeText={(text) => {
-                                                let countryCode = "";
-
-                                                text = text.replace(
-                                                  /[^0-9]/g,
-                                                  ""
-                                                );
-
-                                                if (text.length > 0) {
-                                                  countryCode = "+";
-                                                }
-
-                                                countryCode += text.slice(0, 3);
-
-                                                this.setState({
-                                                  countryCode: countryCode,
-                                                });
-                                              }}
-                                              style={{
-                                                borderWidth: 1,
-                                                borderColor: "black",
-                                                marginRight: 5,
-                                                borderRadius: 5,
-                                                minWidth: 45,
-                                                textAlign: "center",
-                                              }}
+                                          {this.state.logo && (
+                                            <ImageOrSvg
+                                              height="50"
+                                              uri={this.state.logo} // Remote SVG URL
+                                              handleLoaded={this.handleLoaded}
                                             />
-                                            <View
-                                              style={{
-                                                borderColor: "#2a7451",
-                                                borderBottomWidth: 3,
-                                                flexDirection: "row",
-                                                width: "90%",
-                                              }}
-                                            >
-                                              <PhoneNumberMask
-                                                placeholderTextColor="#2a7451"
-                                                onNumberChange={(phoneNumber) =>
-                                                  this.setState({
-                                                    inputPhone: phoneNumber,
-                                                  })
-                                                }
-                                                style={styles.phoneInput}
-                                                placeholder={this.props.translate(
-                                                  "insertPhoneNUmber"
-                                                )}
-                                                placeholderStyle={{
-                                                  backgroundColor: "blue",
-                                                }}
-                                              />
-                                              {this.state.loading ? (
-                                                <View
-                                                  style={{
-                                                    width: DeviceInfo.isTablet()
-                                                      ? 58
-                                                      : 48,
-                                                    height: 50,
-                                                    justifyContent: "center",
-                                                    right: 35,
-                                                  }}
-                                                >
-                                                  <ActivityIndicator
-                                                    color={"green"}
-                                                  />
-                                                </View>
-                                              ) : this.state.inputPhone.length <
-                                                12 ? (
-                                                <TouchableOpacity
-                                                  onPress={() => {}}
-                                                  style={{
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    width:
-                                                      Platform.OS === "ios"
-                                                        ? 48
-                                                        : undefined,
-                                                    height:
-                                                      Platform.OS === "ios"
-                                                        ? 48
-                                                        : undefined,
-                                                  }}
-                                                >
-                                                  <Text
-                                                    style={{ display: "none" }}
-                                                  >
-                                                    {
-                                                      this.state.inputPhone
-                                                        .length
-                                                    }
-                                                  </Text>
-                                                </TouchableOpacity>
-                                              ) : (
-                                                <TouchableOpacity
-                                                  onPress={() =>
-                                                    this.newLogin("")
-                                                  }
-                                                  style={{
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    right: 35,
-                                                  }}
-                                                >
-                                                  <ScalableImage
-                                                    source={require("./images/green_arrow.png")}
-                                                    width={
-                                                      DeviceInfo.isTablet()
-                                                        ? 58
-                                                        : 48
-                                                    }
-                                                  />
-                                                </TouchableOpacity>
-                                              )}
-                                            </View>
-                                          </View>
-
+                                          )}
+                                        </TouchableOpacity>
+                                        <View>
                                           <Text
                                             style={{
-                                              fontSize: 11,
-                                              color: "red",
-                                              padding: 5,
+                                              fontFamily: "Quicksand-Bold",
+                                              fontSize: 25,
+                                              color: "#afbec5",
+                                              textAlign: "right",
                                             }}
                                           >
-                                            {this.state.errorTxt}
+                                            {this.props.translate("login")}
                                           </Text>
                                         </View>
                                       </View>
-                                    </KeyboardAvoidingView>
-                                  )}
-                                </ScrollView>
+                                      {this.state.viewCarousel ? (
+                                        <View>
+                                          <Carousel
+                                            layout={"default"}
+                                            loop={true}
+                                            autoplay={true}
+                                            scrollEnabled={true}
+                                            autoplayInterval={5000}
+                                            ref={(ref) => (this.carousel = ref)}
+                                            data={this.state.sliderItems}
+                                            renderItem={this._renderItem}
+                                            sliderWidth={
+                                              Dimensions.get("window").width
+                                            }
+                                            itemWidth={
+                                              Dimensions.get("window").width
+                                            }
+                                            onSnapToItem={(index) =>
+                                              this.setState({
+                                                activeIndex: index,
+                                              })
+                                            }
+                                          />
+                                          {this.pagination}
+                                        </View>
+                                      ) : (
+                                        <View
+                                          style={{
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                          }}
+                                        >
+                                          <ScalableImage
+                                            source={require("./images/skeleton.gif")}
+                                            width={
+                                              Dimensions.get("window").width
+                                            }
+                                          />
+                                        </View>
+                                      )}
+                                      {this.state.signinStep == 1 ? (
+                                        <KeyboardAvoidingView
+                                          behavior="position"
+                                          keyboardVerticalOffset={
+                                            keyboardVerticalOffset
+                                          }
+                                          style={{
+                                            justifyContent: "center",
+                                            marginTop: 0,
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          <View
+                                            style={{
+                                              width:
+                                                Dimensions.get("window").width *
+                                                0.8,
+                                              padding: 30,
+                                            }}
+                                          >
+                                            {/* <Text style={{ fontFamily: 'Quicksand-Regular',fontSize: 25, color: '#fff', textAlign: "center", marginBottom: 15}}>{this.props.translate("enterDetails")}</Text> */}
+                                            <TouchableOpacity
+                                              onPress={() =>
+                                                this.nextLoginStep(2)
+                                              }
+                                              style={styles.button}
+                                            >
+                                              <Text
+                                                style={{
+                                                  fontFamily:
+                                                    "Quicksand-Regular",
+                                                  textAlign: "center",
+                                                  fontSize: 25,
+                                                  color: "#fff",
+                                                }}
+                                              >
+                                                {this.props.translate("signin")}
+                                              </Text>
+                                            </TouchableOpacity>
+                                          </View>
+                                          <View
+                                            style={{
+                                              width:
+                                                Dimensions.get("window").width *
+                                                0.8,
+                                              marginTop: 0,
+                                            }}
+                                          >
+                                            <TouchableOpacity
+                                              onPress={() =>
+                                                this.props.gotoSignUp()
+                                              }
+                                            >
+                                              <Text
+                                                style={{
+                                                  fontFamily:
+                                                    "Quicksand-Regular",
+                                                  fontSize: 20,
+                                                  color: "#fff",
+                                                  marginBottom: 15,
+                                                  textAlign: "center",
+                                                  backgroundColor: "#2e3643",
+                                                  padding: 7,
+                                                  borderRadius: 5,
+                                                }}
+                                              >
+                                                {this.props.translate(
+                                                  "donthaveanaccount"
+                                                )}
+                                              </Text>
+                                            </TouchableOpacity>
+                                          </View>
+                                        </KeyboardAvoidingView>
+                                      ) : (
+                                        <KeyboardAvoidingView
+                                          behavior="position"
+                                          keyboardVerticalOffset={
+                                            keyboardVerticalOffset
+                                          }
+                                          style={{
+                                            justifyContent: "center",
+                                            marginTop: 0,
+                                            alignItems: "center",
+                                          }}
+                                        >
+                                          <View
+                                            style={{
+                                              width:
+                                                Dimensions.get("window").width *
+                                                0.8,
+                                              padding: 30,
+                                            }}
+                                          >
+                                            <View style={{ paddingTop: 0 }}>
+                                              <View
+                                                style={[
+                                                  styles.input,
+                                                  {
+                                                    flexDirection: "row",
+                                                    justifyContent:
+                                                      "space-between",
+                                                    width: "100%",
+                                                  },
+                                                ]}
+                                              >
+                                                <TextInput
+                                                  value={this.state.countryCode}
+                                                  onChangeText={(text) => {
+                                                    let countryCode = "";
+
+                                                    text = text.replace(
+                                                      /[^0-9]/g,
+                                                      ""
+                                                    );
+
+                                                    if (text.length > 0) {
+                                                      countryCode = "+";
+                                                    }
+
+                                                    countryCode += text.slice(
+                                                      0,
+                                                      3
+                                                    );
+
+                                                    this.setState({
+                                                      countryCode: countryCode,
+                                                    });
+                                                  }}
+                                                  style={{
+                                                    borderWidth: 1,
+                                                    borderColor: "black",
+                                                    marginRight: 5,
+                                                    borderRadius: 5,
+                                                    minWidth: 45,
+                                                    textAlign: "center",
+                                                  }}
+                                                />
+                                                <View
+                                                  style={{
+                                                    borderColor: "#2a7451",
+                                                    borderBottomWidth: 3,
+                                                    flexDirection: "row",
+                                                    width: "90%",
+                                                  }}
+                                                >
+                                                  <PhoneNumberMask
+                                                    placeholderTextColor="#2a7451"
+                                                    onNumberChange={(
+                                                      phoneNumber
+                                                    ) =>
+                                                      this.setState({
+                                                        inputPhone: phoneNumber,
+                                                      })
+                                                    }
+                                                    style={styles.phoneInput}
+                                                    placeholder={this.props.translate(
+                                                      "insertPhoneNUmber"
+                                                    )}
+                                                    placeholderStyle={{
+                                                      backgroundColor: "blue",
+                                                    }}
+                                                  />
+                                                  {this.state.loading ? (
+                                                    <View
+                                                      style={{
+                                                        width:
+                                                          DeviceInfo.isTablet()
+                                                            ? 58
+                                                            : 48,
+                                                        height: 50,
+                                                        justifyContent:
+                                                          "center",
+                                                        right: 35,
+                                                      }}
+                                                    >
+                                                      <ActivityIndicator
+                                                        color={"green"}
+                                                      />
+                                                    </View>
+                                                  ) : this.state.inputPhone
+                                                      .length < 12 ? (
+                                                    <TouchableOpacity
+                                                      onPress={() => {}}
+                                                      style={{
+                                                        justifyContent:
+                                                          "center",
+                                                        alignItems: "center",
+                                                        width:
+                                                          Platform.OS === "ios"
+                                                            ? 48
+                                                            : undefined,
+                                                        height:
+                                                          Platform.OS === "ios"
+                                                            ? 48
+                                                            : undefined,
+                                                      }}
+                                                    >
+                                                      <Text
+                                                        style={{
+                                                          display: "none",
+                                                        }}
+                                                      >
+                                                        {
+                                                          this.state.inputPhone
+                                                            .length
+                                                        }
+                                                      </Text>
+                                                    </TouchableOpacity>
+                                                  ) : (
+                                                    <TouchableOpacity
+                                                      onPress={() =>
+                                                        this.newLogin("")
+                                                      }
+                                                      style={{
+                                                        justifyContent:
+                                                          "center",
+                                                        alignItems: "center",
+                                                        right: 35,
+                                                      }}
+                                                    >
+                                                      <ScalableImage
+                                                        source={require("./images/green_arrow.png")}
+                                                        width={
+                                                          DeviceInfo.isTablet()
+                                                            ? 58
+                                                            : 48
+                                                        }
+                                                      />
+                                                    </TouchableOpacity>
+                                                  )}
+                                                </View>
+                                              </View>
+
+                                              <Text
+                                                style={{
+                                                  fontSize: 11,
+                                                  color: "red",
+                                                  padding: 5,
+                                                }}
+                                              >
+                                                {this.state.errorTxt}
+                                              </Text>
+                                            </View>
+                                          </View>
+                                        </KeyboardAvoidingView>
+                                      )}
+                                    </ScrollView>
+                                  </>
+                                )}
                                 <View
                                   style={{
                                     alignItems: "center",

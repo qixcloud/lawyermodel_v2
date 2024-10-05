@@ -94,7 +94,6 @@ const Appointment = ({ items, translate }) => {
           allowFontScaling={false}
           style={{
             fontFamily: "Eina03-Regular",
-            color: "#fff",
             fontSize: DeviceInfo.isTablet() ? 22 : 15,
             marginTop: DeviceInfo.isTablet() ? 48 : 10,
           }}
@@ -123,14 +122,16 @@ const Appointment = ({ items, translate }) => {
       ios: "maps:0,0?q=",
       android: "geo:0,0?q=",
     });
-    const url = scheme + encodedAddress;
-
+    let url = scheme + encodedAddress;
+    console.log("url", url);
     Linking.canOpenURL(url)
       .then((supported) => {
         if (supported) {
           Linking.openURL(url);
         } else {
-          console.error("No se pudo abrir la URL de mapas");
+          //console.error("No se pudo abrir la URL de mapas");
+          url = "https://maps.google.com/?q=" + encodedAddress;
+          Linking.openURL(url);
         }
       })
       .catch((err) => console.error("Ocurrió un error", err));

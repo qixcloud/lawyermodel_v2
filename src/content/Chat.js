@@ -90,6 +90,8 @@ export default class Chat extends Component {
       "keyboardDidHide",
       this.keyboardDidHide.bind(this)
     );
+
+    this.onNotificationListener();
   }
 
   componentWillUnmount() {
@@ -432,15 +434,16 @@ export default class Chat extends Component {
   }
 
   onNotificationListener = () => {
-    this.removeOnNotification = messaging().onMessage(async (remoteMessage) => {
+    //this.removeOnNotification = messaging().onMessage(async (remoteMessage) => {
+    messaging().onMessage(async (remoteMessage) => {
       if (remoteMessage.notification) {
         var title = remoteMessage.notification.title;
 
         if (title == "Chat") {
+          //console.log("Chat", remoteMessage.notification);
           this.processNotification(remoteMessage.notification);
         }
       }
-
       console.log("Foreground notification", remoteMessage);
     });
   };
@@ -462,9 +465,10 @@ export default class Chat extends Component {
     });
   };
   processNotification = (note) => {
-    var title = note._title;
+    var title = note.title;
+    //console.log("title", title);
     if (title == "Chat") {
-      this.pushMsgs(note._body);
+      this.pushMsgs(note.body);
       sentCount = 0;
       this.setState({ lastSentCount: sentCount });
     }
@@ -479,9 +483,11 @@ export default class Chat extends Component {
         ) {
           this.state.messages.push({ direction: "left", text: body });
         }
+        this.state.messages.push({ direction: "left", text: body });
       } else {
         this.state.messages.push({ direction: "left", text: body });
       }
+
       this.setState({
         messages: this.state.messages,
         inputBarText: "",
@@ -543,7 +549,7 @@ export default class Chat extends Component {
         </View>
       );
     };
-    console.log("this.state.isKeyboardOpen", this.state.isKeyboardOpen);
+    //console.log("this.state.isKeyboardOpen", this.state.isKeyboardOpen);
     return (
       <KeyboardAvoidingView
         behavior="position"
@@ -552,7 +558,7 @@ export default class Chat extends Component {
             ? keyboardVerticalOffset + 20
             : keyboardVerticalOffset - 30
         }
-        style={styles.container}
+        style={[styles.container, { backgroundColor: this.props.background }]}
       >
         {renderHeader()}
         <ScrollView
@@ -596,7 +602,6 @@ export default class Chat extends Component {
                 />
                 <Text
                   style={{
-                    color: "#fff",
                     fontSize: DeviceInfo.isTablet() ? 29.75 : undefined,
                   }}
                 >
@@ -604,7 +609,6 @@ export default class Chat extends Component {
                 </Text>
                 <Text
                   style={{
-                    color: "#fff",
                     fontSize: DeviceInfo.isTablet() ? 29.75 : undefined,
                   }}
                 >
@@ -780,7 +784,7 @@ class MessageBubble extends Component {
       let name = global.clientName?.replace(" ", "-") ?? "user";
 
       const formattedUrl = url.replace("admin", name);
-      console.log("formattedUrl", formattedUrl);
+      //console.log("formattedUrl", formattedUrl);
 
       return (
         <TouchableOpacity
@@ -792,7 +796,7 @@ class MessageBubble extends Component {
           }}
           onPress={() => Linking.openURL(formattedUrl)}
         >
-          <Text style={{ fontSize: 19 }}>Join Video Chat</Text>
+          <Text style={{ fontSize: 19, color: "#5493e7" }}>{formattedUrl}</Text>
 
           <View
             style={{
@@ -1212,7 +1216,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginHorizontal: 10,
     alignItems: "center",
-    bottom: Platform.OS === "android" ? 50 : 0,
+    bottom: Platform.OS === "android" ? 50 : 30,
   },
   textBox: {
     borderRadius: 5,
@@ -1292,7 +1296,7 @@ const styles = StyleSheet.create({
   },
 
   messageBubbleTextLeft: {
-    backgroundColor: "#f2efe0",
+    backgroundColor: "#fff",
     color: "black",
     paddingVertical: 5,
     paddingHorizontal: 10,

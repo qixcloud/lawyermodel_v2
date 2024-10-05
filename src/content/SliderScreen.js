@@ -11,6 +11,8 @@ import {
 import { Icon } from "react-native-elements";
 import { Modal } from "react-native";
 import LottieView from "lottie-react-native";
+import { appId, getHeaders, getDashboardItems } from "./Helper";
+import * as Progress from "react-native-progress";
 
 const { width: screenWidth } = Dimensions.get("window");
 
@@ -19,17 +21,42 @@ const ITEM_WIDTH = screenWidth * 0.75;
 const ITEM_SEPARATOR_WIDTH = screenWidth * 0.1;
 
 const SliderScreen = (props) => {
-  data = props.sliderItems;
+  //data = props.sliderItems;
   const [activeSlide, setActiveSlide] = useState(0);
+  const [appName, setAppName] = useState("");
+  const [intro, setIntro] = useState("");
+  const [data, setData] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   const animationRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (activeSlide === data.length - 1) {
-      animationRef.current.play();
-    }
-  }, [activeSlide]);
+    const fetchData = async () => {
+      try {
+        // Your async code here
+        const dashboardData = await getDashboardItems();
+        //console.log("appName", dashboardData.appName);
+        setAppName(dashboardData.appName); // Set data to state
+        setIntro(dashboardData.intro); // Set data to state
+        setData(dashboardData.intro.images); // Set data to state
+        //console.log(dashboardData.intro.images);
 
+        if (Array.isArray(data) && activeSlide === data.length - 1) {
+          animationRef.current.play();
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        //setAppName(""); // Set loading to false once data is fetched
+      }
+    };
+
+    fetchData();
+  }, [activeSlide]);
+  const handleLoad = () => {
+    setLoaded(true);
+    console.log("setLoaded");
+  };
   const renderItem = ({ item, index }) => {
     if (index === data.length - 1) {
       return (
@@ -81,7 +108,7 @@ const SliderScreen = (props) => {
               color: "#e4e7e9",
             }}
           >
-            Lyfe Law
+            {appName}
           </Text>
 
           <TouchableOpacity
@@ -105,7 +132,7 @@ const SliderScreen = (props) => {
         </View>
       );
     }
-      console.log(item)
+    //console.log("item", item);
     return (
       <ImageBackground
         style={{
@@ -115,9 +142,10 @@ const SliderScreen = (props) => {
           borderRadius: 15,
           marginHorizontal: ITEM_SEPARATOR_WIDTH / 2,
         }}
-        resizeMode={'contain'}
-        source={item}
+        resizeMode={"contain"}
+        source={{ uri: item }}
         imageStyle={{ borderRadius: 10 }}
+        onLoad={handleLoad}
       >
         <Text
           style={{
@@ -144,7 +172,7 @@ const SliderScreen = (props) => {
               bottom: 30,
               borderRadius: 10,
             }}
-            onPress={() => Linking.openURL(item.link)}
+            onPress={() => Linking.openURL(intro.link)}
           >
             <Icon
               name="play-circle"
@@ -179,84 +207,103 @@ const SliderScreen = (props) => {
   };
 
   return (
-    <Modal
-      animationType="slide"
-      visible={props.showSlider}
-      onRequestClose={props.onPress}
-    >
-      <View style={{ flex: 1, backgroundColor: "#2e3643", paddingTop: 20 }}>
-        {activeSlide >= 1 ? (
-          <TouchableOpacity
-            onPress={props.onPress}
-            style={{
-              width: 50,
-              height: 50,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "#e4e7e9",
-              borderRadius: 5,
-              alignSelf: "flex-end",
-              margin: 30,
-            }}
-          >
-            <Icon name={"close"} />
-          </TouchableOpacity>
-        ) : (
+    <>
+      <Modal
+        animationType="slide"
+        visible={props.showSlider}
+        onRequestClose={props.onPress}
+      >
+        <View style={{ flex: 1, backgroundColor: "#2e3643", paddingTop: 20 }}>
+          {activeSlide >= 1 ? (
+            <TouchableOpacity
+              onPress={props.onPress}
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#e4e7e9",
+                borderRadius: 5,
+                alignSelf: "flex-end",
+                margin: 30,
+              }}
+            >
+              <Icon name={"close"} />
+            </TouchableOpacity>
+          ) : (
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                alignSelf: "flex-end",
+                margin: 30,
+              }}
+            />
+          )}
+          <View style={{ marginLeft: 40 }}>
+            <Text style={{ color: "#e4e7e9", fontSize: 18 }}>
+              {props.translate("intro")}
+            </Text>
+            <Text style={{ color: "#e4e7e9", marginTop: 10, marginBottom: 30 }}>
+              {props.translate("whatToExpect")}
+            </Text>
+          </View>
+          <View style={{ paddingBottom: "20%" }}>
+            <FlatList
+              data={data}
+              renderItem={renderItem}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              pagingEnabled
+              disableIntervalMomentum
+              snapToInterval={ITEM_WIDTH + ITEM_SEPARATOR_WIDTH}
+              decelerationRate={"fast"}
+              onMomentumScrollEnd={(event) =>
+                onSlideChange(
+                  Math.round(
+                    event.nativeEvent.contentOffset.x /
+                      (ITEM_WIDTH + ITEM_SEPARATOR_WIDTH)
+                  )
+                )
+              }
+              contentContainerStyle={{
+                paddingHorizontal: ITEM_SEPARATOR_WIDTH / 2,
+              }}
+            />
+          </View>
           <View
             style={{
-              width: 50,
-              height: 50,
+              flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              borderRadius: 5,
-              alignSelf: "flex-end",
-              margin: 30,
+              marginBottom: 30,
             }}
-          />
+          >
+            {Array.isArray(data) && data.length > 0 && (
+              <>{data.map((item, index) => renderDot(index))}</>
+            )}
+          </View>
+        </View>
+        {!loaded && (
+          <View
+            style={{
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#2e3643",
+              position: "absolute",
+              width: "100%",
+              zIndex: 1,
+            }}
+          >
+            <Progress.Circle size={30} indeterminate={true} />
+          </View>
         )}
-        <View style={{ marginLeft: 40 }}>
-          <Text style={{ color: "#e4e7e9", fontSize: 18 }}>
-            {props.translate("intro")}
-          </Text>
-          <Text style={{ color: "#e4e7e9", marginTop: 10, marginBottom: 30 }}>
-            {props.translate("whatToExpect")}
-          </Text>
-        </View>
-        <View style={{ paddingBottom: "20%" }}>
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            disableIntervalMomentum
-            snapToInterval={ITEM_WIDTH + ITEM_SEPARATOR_WIDTH}
-            decelerationRate={"fast"}
-            onMomentumScrollEnd={(event) =>
-              onSlideChange(
-                Math.round(
-                  event.nativeEvent.contentOffset.x /
-                    (ITEM_WIDTH + ITEM_SEPARATOR_WIDTH)
-                )
-              )
-            }
-            contentContainerStyle={{
-              paddingHorizontal: ITEM_SEPARATOR_WIDTH / 2,
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: 30,
-          }}
-        >
-          {data.map((item, index) => renderDot(index))}
-        </View>
-      </View>
-    </Modal>
+      </Modal>
+    </>
   );
 };
 

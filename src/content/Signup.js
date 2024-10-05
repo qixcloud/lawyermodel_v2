@@ -15,6 +15,7 @@ import {
   Platform,
   Keyboard,
 } from "react-native";
+import ScalableImage from "react-native-scalable-image";
 import SplashScreen from "./SplashScreen";
 import SignUpSteps from "./SignUpSteps";
 import axios from "axios";
@@ -27,6 +28,7 @@ import messaging from "@react-native-firebase/messaging";
 import { launchCamera } from "react-native-image-picker";
 import { requestCameraPermission } from "./Helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appId, getHeaders, getDashboardItems } from "./Helper";
 // import
 export default class Signup extends Component {
   constructor(props) {
@@ -64,7 +66,12 @@ export default class Signup extends Component {
       inputAddress2: "",
       inputCity: "",
       inputZipCode: "",
-      termsOfService: "",
+      termsOfService: "https://legalpal.app/privacy-policy",
+      appName: "",
+      isDialogVisible: false,
+      checkVerifyTxt: "",
+      loadingFa: false,
+      countryCode: "+1",
     };
   }
 
@@ -72,7 +79,10 @@ export default class Signup extends Component {
     const token = await this.getToken();
     this.setState({ token: token });
     console.log("token", token);
-    await this.getTermsOfService();
+    //await this.getTermsOfService();
+    const dashboardData = await getDashboardItems();
+
+    this.setState({ appName: dashboardData.appName });
   };
 
   getTermsOfService = async () => {
@@ -98,46 +108,174 @@ export default class Signup extends Component {
     return token;
   };
   handleSignUp = async () => {
-    this.setState({ loading: true });
-    const jwt = await AsyncStorage.getItem("jwtToken");
+    const sendCode = () => {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    await axios({
-      method: "get",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-      },
-      url: "https://api.qix.cloud/conversation",
-    })
-      .then(async (res) => {
-        const conversationData = res?.data;
-        conversationData.fullName = this.state.inputName;
-        conversationData.email = this.state.inputEmail;
-
-        await axios({
-          method: "put",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-          url: "https://api.qix.cloud/conversation",
-          data: conversationData,
-        })
-          .then((res) => {
-            if (res.data === "success") {
-              this.props.finishSignUp();
-            }
-          })
-          .finally(() => {
-            this.setState({ loading: false });
-          });
-      })
-      .catch(() => {
-        this.setState({ loading: false });
+      const raw = JSON.stringify({
+        phone: (this.state.countryCode + this.state.inputPhone).replace(
+          /[^\d+]/g,
+          ""
+        ),
       });
+
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      fetch("https://api.qix.cloud/sendCode", requestOptions)
+        .then((response) => response.text())
+        .then((result) => {
+          // 2FA SENT
+          this.setState({ isDialogVisible: true });
+        })
+        .catch((error) => console.log("error", error))
+        .finally(() => {
+          this.setState({ loading: false });
+        });
+    };
+    const jwt = await AsyncStorage.getItem("jwtToken");
+    if (jwt) {
+      this.setState({ loading: true });
+      await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+        url: "https://api.qix.cloud/conversation",
+      })
+        .then(async (res) => {
+          const conversationData = res?.data;
+          conversationData.fullName = this.state.inputName;
+          conversationData.email = this.state.inputEmail;
+
+          await axios({
+            method: "put",
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+            url: "https://api.qix.cloud/conversation",
+            data: conversationData,
+          })
+            .then((res) => {
+              if (res.data === "success") {
+                this.props.finishSignUp();
+              }
+              console.log("res", res);
+            })
+            .finally(() => {
+              this.setState({ loading: false });
+            });
+        })
+        .catch(() => {
+          this.setState({ loading: false });
+          sendCode();
+        });
+    } else {
+      sendCode();
+    }
+  };
+  checkVerify = () => {
+    this.setState({ loadingFa: true });
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+      phone: (this.state.countryCode + this.state.inputPhone).replace(
+        /[^\d+]/g,
+        ""
+      ),
+      app: appId,
+      code: this.state.checkVerifyTxt,
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch("https://api.qix.cloud/sign/phone", requestOptions)
+      .then(async (result) => {
+        if (result.status !== 200) return;
+        console.log("result", result);
+
+        const responseJson = await result.json();
+
+        console.log("responseJson", responseJson);
+
+        if (responseJson) {
+          await AsyncStorage.setItem("jwtToken", responseJson);
+          await AsyncStorage.setItem(
+            "phone",
+            (this.state.countryCode + this.state.inputPhone).replace(
+              /[^\d+]/g,
+              ""
+            )
+          );
+
+          await this.signupProcess(responseJson);
+        } else {
+          Alert.alert("Fail, Please try again “Code Incorrect”");
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        Alert.alert("Fail, Please try again “Code Incorrect”");
+      })
+      .finally(() => {
+        this.setState({ loadingFa: false });
+      });
+  };
+  signupProcess = async (jwt) => {
+    if (jwt) {
+      this.setState({ loading: true });
+      await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+        url: "https://api.qix.cloud/conversation",
+      })
+        .then(async (res) => {
+          const conversationData = res?.data;
+          conversationData.fullName = this.state.inputName;
+          conversationData.email = this.state.inputEmail;
+
+          await axios({
+            method: "put",
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+            url: "https://api.qix.cloud/conversation",
+            data: conversationData,
+          })
+            .then((res) => {
+              if (res.data === "success") {
+                this.props.finishSignUp();
+              }
+              console.log("res", res);
+            })
+            .finally(() => {
+              this.setState({ loading: false });
+            });
+        })
+        .catch(() => {
+          this.setState({ loading: false });
+        });
+    }
   };
   gotoSite = () => {
     Linking.openURL(global.baseUrl);
   };
 
+  hideDialog = () => {
+    this.setState({ isDialogVisible: false });
+  };
   render() {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
     const supportedURL = global.baseUrl;
@@ -312,126 +450,247 @@ export default class Signup extends Component {
                   </Text>
                 </View>
               </View>
-
-              <View
-                style={{
-                  justifyContent: "space-between",
-                  flex: 1,
-                  width: "80%",
-                }}
-              >
-                <View style={{ marginTop: 50 }}>
-                  <TextInput
-                    onBlur={checkSecondStep}
-                    value={this.state.inputName}
-                    onChangeText={(text) => this.setState({ inputName: text })}
-                    style={styles.input}
-                    placeholder={this.props.translate("name")}
-                    placeholderTextColor="#afbec5"
-                  />
-                  <TextInput
-                    onBlur={checkSecondStep}
-                    value={this.state.inputPhone}
-                    onChangeText={(text) =>
-                      this.setState({ inputPhone: formatPhone(text) })
-                    }
-                    style={styles.input}
-                    placeholder={this.props.translate("phone")}
-                    placeholderTextColor="#afbec5"
-                    keyboardType={"numeric"}
-                  />
-                  <TextInput
-                    onBlur={checkSecondStep}
-                    value={this.state.inputEmail}
-                    onChangeText={(text) =>
-                      this.setState({ inputEmail: text.trim() })
-                    }
-                    style={styles.input}
-                    placeholder={this.props.translate("email")}
-                    placeholderTextColor="#afbec5"
-                  />
-
-                  <Text style={{ fontSize: 11, color: "red", padding: 5 }}>
-                    {this.state.errortxt}
-                  </Text>
-                  <View style={{ height: 150, width: 2 }} />
-                </View>
-              </View>
-              <View>
+              {this.state.isDialogVisible ? (
                 <View
                   style={{
-                    flexDirection: "row",
-                  }}
-                >
-                  <View
-                    style={{
-                      height: 25,
-                      width: 25,
-                      borderRadius: 25,
-                      backgroundColor: this.state.termsAndConditions
-                        ? "#5fab78"
-                        : "#ea5d59",
-                      marginRight: 10,
-                    }}
-                  />
-                  <Text
-                    style={{
-                      fontFamily: "Quicksand-Regular",
-                      fontSize: 18,
-                      color: "#afbec5",
-                    }}
-                  >
-                    {this.props.translate("termsAndCondition")}
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    backgroundColor: "#333b48",
-                    marginTop: 30,
-                    flexDirection: "row",
+                    flex: 1,
+                    justifyContent: "center",
                     alignItems: "center",
                   }}
                 >
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.setState({
-                        termsAndConditions: !this.state.termsAndConditions,
-                      });
-                    }}
+                  <KeyboardAvoidingView
                     style={{
-                      height: 30,
-                      width: 30,
-                      borderColor: "white",
-                      borderWidth: 2,
-                      marginVertical: 10,
-                      marginLeft: 10,
-                      justifyContent: "center",
+                      backgroundColor: "#e4e5e7",
+                      padding: 15,
+                      width: 300,
+                      borderRadius: 10,
+                      marginBottom: 100,
                     }}
                   >
-                    {this.state.termsAndConditions ? (
-                      <Icon
-                        name="check"
-                        type="font-awesome"
-                        color={"white"}
-                        size={15}
-                      />
-                    ) : null}
-                  </TouchableOpacity>
-                  <Text
-                    style={{
-                      fontFamily: "Quicksand-Regular",
-                      fontSize: 13,
-                      color: "#589cdd",
-                      marginLeft: 10,
-                      paddingRight: 20,
-                    }}
-                    onPress={() => Linking.openURL(this.state.termsOfService)}
-                  >
-                    {this.props.translate("AcceptTermsAndCondition")}
-                  </Text>
+                    <ScalableImage
+                      source={require("./images/verify.png")}
+                      width={200}
+                      style={{ marginLeft: 50 }}
+                    />
+                    <Text
+                      allowFontScaling={false}
+                      style={{
+                        textAlign: "center",
+                        fontFamily: "Quicksand-Regular",
+                        fontSize: 25,
+                        fontWeight: "bold",
+                        marginVertical: 10,
+                      }}
+                    >
+                      Verify
+                    </Text>
+                    <TextInput
+                      onChangeText={(text) =>
+                        this.setState({ checkVerifyTxt: text })
+                      }
+                      style={styles.input}
+                      placeholder="Please input Verification code."
+                      placeholderTextColor="#555"
+                      keyboardType={"numeric"}
+                    ></TextInput>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TouchableOpacity
+                        onPress={() => this.hideDialog()}
+                        style={styles.button}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            textAlign: "center",
+                            fontSize: 20,
+                            color: "#fff",
+                          }}
+                        >
+                          {this.props.translate("cancel")}
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => this.checkVerify()}
+                        style={styles.button}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            textAlign: "center",
+                            fontSize: 20,
+                            color: "#fff",
+                          }}
+                        >
+                          {this.props.translate("submit")}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </KeyboardAvoidingView>
                 </View>
-              </View>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      justifyContent: "space-between",
+                      flex: 1,
+                      width: "80%",
+                    }}
+                  >
+                    <View style={{ marginTop: 50 }}>
+                      <TextInput
+                        onBlur={checkSecondStep}
+                        value={this.state.inputName}
+                        onChangeText={(text) =>
+                          this.setState({ inputName: text })
+                        }
+                        style={styles.input}
+                        placeholder={this.props.translate("name")}
+                        placeholderTextColor="#afbec5"
+                      />
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          width: "100%",
+                        }}
+                      >
+                        <TextInput
+                          value={this.state.countryCode}
+                          onChangeText={(text) => {
+                            let countryCode = "";
+
+                            text = text.replace(/[^0-9]/g, "");
+
+                            if (text.length > 0) {
+                              countryCode = "+";
+                            }
+
+                            countryCode += text.slice(0, 3);
+
+                            this.setState({
+                              countryCode: countryCode,
+                            });
+                          }}
+                          style={[styles.input, { width: "10%" }]}
+                        />
+                        <TextInput
+                          onBlur={checkSecondStep}
+                          value={this.state.inputPhone}
+                          onChangeText={(text) =>
+                            this.setState({ inputPhone: formatPhone(text) })
+                          }
+                          style={[styles.input, { width: "89%" }]}
+                          placeholder={this.props.translate("phone")}
+                          placeholderTextColor="#afbec5"
+                          keyboardType={"numeric"}
+                        />
+                      </View>
+                      <TextInput
+                        onBlur={checkSecondStep}
+                        value={this.state.inputEmail}
+                        onChangeText={(text) =>
+                          this.setState({ inputEmail: text.trim() })
+                        }
+                        style={styles.input}
+                        placeholder={this.props.translate("email")}
+                        placeholderTextColor="#afbec5"
+                      />
+
+                      <Text style={{ fontSize: 11, color: "red", padding: 5 }}>
+                        {this.state.errortxt}
+                      </Text>
+                      <View style={{ height: 150, width: 2 }} />
+                    </View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                      }}
+                    >
+                      <View
+                        style={{
+                          height: 25,
+                          width: 25,
+                          borderRadius: 25,
+                          backgroundColor: this.state.termsAndConditions
+                            ? "#5fab78"
+                            : "#ea5d59",
+                          marginRight: 10,
+                        }}
+                      />
+                      <Text
+                        style={{
+                          fontFamily: "Quicksand-Regular",
+                          fontSize: 18,
+                          color: "#afbec5",
+                        }}
+                      >
+                        {this.props.translate("termsAndCondition")}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={{
+                        backgroundColor: "#333b48",
+                        marginTop: 30,
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.setState({
+                            termsAndConditions: !this.state.termsAndConditions,
+                          });
+                        }}
+                        style={{
+                          height: 30,
+                          width: 30,
+                          borderColor: "white",
+                          borderWidth: 2,
+                          marginVertical: 10,
+                          marginLeft: 10,
+                          justifyContent: "center",
+                        }}
+                      >
+                        {this.state.termsAndConditions ? (
+                          <Icon
+                            name="check"
+                            type="font-awesome"
+                            color={"white"}
+                            size={15}
+                          />
+                        ) : null}
+                      </TouchableOpacity>
+                      <Text
+                        style={{
+                          fontFamily: "Quicksand-Regular",
+                          fontSize: 13,
+                          color: "#589cdd",
+                          marginLeft: 10,
+                          padding: 10,
+                          width: "80%",
+                        }}
+                        onPress={() =>
+                          Linking.openURL(this.state.termsOfService)
+                        }
+                      >
+                        {/* {this.props.translate("AcceptTermsAndCondition")} */}
+                        You agree to receive SMS messages to your phone number
+                        from {this.state.appName} and to the terms of the
+                        Privacy Policy. If you wish to cancel the SMS messaging
+                        service, just reply “STOP.” If you have any other
+                        questions, please contact your support representative.
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </View>
 
             <View

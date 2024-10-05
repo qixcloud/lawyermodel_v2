@@ -71,7 +71,8 @@ export default class SplashScreen extends Component {
     global.version = 1;
     global.lang = "en";
     global.baseUrl = "https://qix.cloud/lawyermodel/";
-    global.title = "Lawyer Model";
+    global.mainUrl = "https://www.humphreyandassociates.com/";
+    global.title = "Humphrey Law";
     global.logo = require("./logo.png");
     global.staffId = 0;
     global.staffName = "";
@@ -280,7 +281,7 @@ export default class SplashScreen extends Component {
             }}
           >
             <Image
-              source={require("./images/loading1.jpg")}
+              source={require("./images/bootsplash_logo.png")}
               style={{
                 width: 175,
                 height: 175,

@@ -47,6 +47,7 @@ import BlockStatus from "./dashboardBlocks/status";
 import BlockPosts from "./dashboardBlocks/posts";
 import BlockBoxs from "./dashboardBlocks/twoBoxs";
 import BlockButton from "./dashboardBlocks/button";
+import * as Progress from "react-native-progress";
 // import
 
 export default class Dashboard extends Component {
@@ -104,6 +105,7 @@ export default class Dashboard extends Component {
       colorTop: "#eef2f5",
       colorBody: "#eef2f5",
       colorBottom: "#a8c6f5",
+      logoLoaded: false,
     };
     this.sheetRef = React.createRef();
     this.getBadgeCount();
@@ -206,6 +208,7 @@ export default class Dashboard extends Component {
     //   this.setState({ businessPhone: res.data.company_phone });
     // });
   }
+
   fetchCalendarEvents = async (projectIdProp) => {
     const date = new Date();
     date.setMonth(date.getMonth() - 2);
@@ -261,6 +264,7 @@ export default class Dashboard extends Component {
     this.setState({
       logo: dashboardData.icons.app,
     });
+    console.log(dashboardData.icons.app);
     this.setState({
       userAvatar: dashboardData.icons.userAvatar,
     });
@@ -395,7 +399,7 @@ export default class Dashboard extends Component {
     this.setState({ appoType: "questions" });
   };
   gotoSite = () => {
-    Linking.openURL(global.baseUrl);
+    Linking.openURL(global.mainUrl);
   };
   gotoQuestions = () => {
     Alert.alert("If you have questions please contact (510) 785-2800");
@@ -574,6 +578,10 @@ export default class Dashboard extends Component {
     this.setState({ calleeId: id });
   };
 
+  handleLogoLoaded = () => {
+    this.setState({ logoLoaded: true });
+  };
+  handleLoaded = () => {};
   get pagination() {
     const { entries, activeIndex } = this.state;
     return (
@@ -827,497 +835,12 @@ export default class Dashboard extends Component {
                                 translate={this.props.translate}
                                 gotoChatBack={this.gotoChatBack}
                                 chatMsgs={this.state.chatMsgs}
+                                background={this.state.colorBody}
                               />
                             ) : (
                               <>
                                 {this.state.appoType == "coming" ? (
-                                  <View style={styles.container0}>
-                                    <View
-                                      style={{
-                                        flexDirection: "row",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        backgroundColor: this.state.colorTop,
-                                        paddingVertical: 15,
-                                      }}
-                                    >
-                                      <TouchableOpacity
-                                        onPress={() => this.gotoSite()}
-                                        style={{
-                                          paddingTop: 20,
-                                          textAlign: "left",
-                                          marginLeft: 40,
-                                          width: "40%",
-                                        }}
-                                      >
-                                        {this.state.logo && (
-                                          <ImageOrSvg
-                                            height="50"
-                                            uri={this.state.logo} // Remote SVG URL
-                                          />
-                                        )}
-                                      </TouchableOpacity>
-                                      <TouchableOpacity
-                                        onPress={() =>
-                                          this.changeDisplayMenu(1)
-                                        }
-                                        style={{
-                                          flexDirection: "row",
-                                          justifyContent: "flex-end",
-                                          alignItems: "center",
-                                          width: "48%",
-                                          marginLeft: "2%",
-                                          paddingRight: 30,
-                                        }}
-                                      >
-                                        {this.state.userAvatar && (
-                                          <ImageOrSvg
-                                            width="40"
-                                            height="40"
-                                            uri={this.state.userAvatar} // Remote SVG URL
-                                          />
-                                        )}
-                                      </TouchableOpacity>
-                                    </View>
-
-                                    <ScrollView
-                                      style={{
-                                        paddingHorizontal: 0,
-                                        backgroundColor: this.state.colorBody,
-                                      }}
-                                    >
-                                      {this.state.DashboardItems?.sections &&
-                                        this.state.DashboardItems.sections.map(
-                                          (section, index) => (
-                                            <View key={index}>
-                                              {section.content == "slider" && (
-                                                <BlockSlider
-                                                  sliderItems={
-                                                    this.state.DashboardItems
-                                                      .sliders.data
-                                                  }
-                                                  duration={
-                                                    this.state.DashboardItems
-                                                      .sliders.duration
-                                                  }
-                                                  gotoPage={this.gotoPage}
-                                                />
-                                              )}
-                                              {section.content == "status" && (
-                                                <BlockStatus
-                                                  status={section}
-                                                  onStatusPress={() => {
-                                                    this.setState({
-                                                      appoType: "status",
-                                                    });
-                                                  }}
-                                                />
-                                              )}
-                                              {section.content == "boxs2" && (
-                                                <BlockBoxs
-                                                  boxs={section}
-                                                  gotoPage={this.gotoPage}
-                                                />
-                                              )}
-                                              {section.content == "posts" && (
-                                                <BlockPosts
-                                                  posts={
-                                                    this.state.DashboardItems
-                                                      .posts
-                                                  }
-                                                />
-                                              )}
-                                              {section.content == "button" && (
-                                                <BlockButton
-                                                  button={section}
-                                                  gotoPage={this.gotoPage}
-                                                />
-                                              )}
-                                            </View>
-                                          )
-                                        )}
-                                    </ScrollView>
-                                    {this.state.bottomVisible == 1 && (
-                                      <View
-                                        style={{
-                                          flexDirection: "row",
-                                          justifyContent: "space-around",
-                                          alignItems: "center",
-                                          backgroundColor:
-                                            this.state.colorBottom,
-                                          paddingVertical: 15,
-                                        }}
-                                      >
-                                        <TouchableOpacity
-                                          onPress={() => this.gotoMenuItem(1)}
-                                          style={{
-                                            flexDirection: "row",
-                                            justifyContent: "center",
-                                          }}
-                                        >
-                                          {this.state.footerIcon1 && (
-                                            <ImageOrSvg
-                                              width="40"
-                                              height="40"
-                                              uri={this.state.footerIcon1} // Remote SVG URL
-                                            />
-                                          )}
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                          // onPress={() =>
-                                          //   this.changeDisplayMenu(true)
-                                          // }
-                                          onPress={() => this.gotoHome()}
-                                          style={{
-                                            flexDirection: "row",
-                                            justifyContent: "center",
-                                          }}
-                                        >
-                                          {this.state.footerIcon2 && (
-                                            <ImageOrSvg
-                                              width="40"
-                                              height="40"
-                                              uri={this.state.footerIcon2} // Remote SVG URL
-                                            />
-                                          )}
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                          onPress={() => this.gotoMenuItem(2)}
-                                          style={{
-                                            flexDirection: "row",
-                                            justifyContent: "center",
-                                          }}
-                                        >
-                                          {this.state.footerIcon3 && (
-                                            <ImageOrSvg
-                                              width="40"
-                                              height="40"
-                                              uri={this.state.footerIcon3} // Remote SVG URL
-                                            />
-                                          )}
-                                        </TouchableOpacity>
-                                      </View>
-                                    )}
-                                    <BlurView
-                                      style={{
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        width: "100%",
-                                      }}
-                                      blurType="dark"
-                                      blurAmount={10}
-                                      reducedTransparencyFallbackColor="black"
-                                      onPress={() => {
-                                        this.closeOverlayAndMenu();
-                                      }}
-                                    />
-                                    <BottomSheet
-                                      backgroundComponent={CustomBackground}
-                                      onChange={this.handleSheetChanges}
-                                      ref={this.sheetRef}
-                                      index={-1}
-                                      enablePanDownToClose={true}
-                                      snapPoints={["90%", "90%", "90%"]}
-                                    >
-                                      <BottomSheetView
-                                        style={{
-                                          flex: 1,
-                                        }}
-                                      >
-                                        <ScrollView
-                                          style={{
-                                            paddingHorizontal: 20,
-                                            paddingBottom: 20,
-                                          }}
-                                        >
-                                          <View
-                                            style={{
-                                              flexDirection: "row",
-                                              justifyContent: "space-between",
-                                              alignItems: "center",
-                                              marginBottom: 5,
-                                              width: "100%",
-                                            }}
-                                          >
-                                            <Text
-                                              allowFontScaling={false}
-                                              style={{
-                                                textAlign: "left",
-                                                fontFamily: "Quicksand-Regular",
-                                                fontSize: 30,
-                                                fontWeight: "bold",
-                                                marginVertical: 10,
-                                                color: "#AFBDC4",
-                                                width: "85%",
-                                                paddingBottom: 15,
-                                              }}
-                                            >
-                                              {this.props.translate("menu")}
-                                            </Text>
-                                            <TouchableOpacity
-                                              onPress={() => {
-                                                this.closeOverlayAndMenu();
-                                              }}
-                                            >
-                                              <ScalableImage
-                                                source={require("./images/close.png")}
-                                                width={15}
-                                              />
-                                            </TouchableOpacity>
-                                          </View>
-                                          <TouchableOpacity
-                                            onPress={() => this.gotoMenuItem(1)}
-                                            style={styles.menuWrap}
-                                          >
-                                            <ScalableImage
-                                              source={require("./images/appointment_icon.png")}
-                                              width={30}
-                                              style={{ marginRight: 10 }}
-                                            />
-                                            <Text style={styles.menuItem}>
-                                              {this.props.translate(
-                                                "appointments"
-                                              )}
-                                            </Text>
-                                          </TouchableOpacity>
-                                          <TouchableOpacity
-                                            onPress={() => this.gotoMenuItem(2)}
-                                            style={styles.menuWrap}
-                                          >
-                                            <ScalableImage
-                                              source={require("./images/chat_icon.png")}
-                                              width={30}
-                                              style={{ marginRight: 10 }}
-                                            />
-                                            <View
-                                              style={{ flexDirection: "row" }}
-                                            >
-                                              <Text style={styles.menuItem}>
-                                                {this.props.translate(
-                                                  "chatwithsupport"
-                                                )}
-                                              </Text>
-                                              {this.state.badgeCount > 0 && (
-                                                <Badge
-                                                  value={this.state.badgeCount}
-                                                  status="error"
-                                                  left={5}
-                                                  top={5}
-                                                />
-                                              )}
-                                            </View>
-                                          </TouchableOpacity>
-
-                                          <TouchableOpacity
-                                            onPress={() => this.gotoMenuItem(4)}
-                                            style={styles.menuWrap}
-                                          >
-                                            <ScalableImage
-                                              source={require("./images/question_icon.png")}
-                                              width={30}
-                                              style={{ marginRight: 10 }}
-                                            />
-                                            <Text style={styles.menuItem}>
-                                              {this.props.translate(
-                                                "questions"
-                                              )}
-                                            </Text>
-                                          </TouchableOpacity>
-                                          <TouchableOpacity
-                                            onPress={() => this.gotoMenuItem(5)}
-                                            style={styles.menuWrap}
-                                          >
-                                            <ScalableImage
-                                              source={require("./images/inbox_icon_1.png")}
-                                              width={30}
-                                              style={{ marginRight: 10 }}
-                                            />
-                                            <View
-                                              style={{ flexDirection: "row" }}
-                                            >
-                                              <Text style={styles.menuItem}>
-                                                {this.props.translate("inbox")}
-                                              </Text>
-                                              {this.state.badgeInboxCount >
-                                                0 && (
-                                                <Badge
-                                                  value={
-                                                    this.state.badgeInboxCount
-                                                  }
-                                                  status="error"
-                                                  left={5}
-                                                  top={5}
-                                                />
-                                              )}
-                                            </View>
-                                          </TouchableOpacity>
-                                          <TouchableOpacity
-                                            onPress={() => this.gotoMenuItem(6)}
-                                            style={styles.menuWrap}
-                                          >
-                                            <ScalableImage
-                                              source={require("./images/Account_icon.png")}
-                                              width={30}
-                                              style={{ marginRight: 10 }}
-                                            />
-                                            <View
-                                              style={{ flexDirection: "row" }}
-                                            >
-                                              <Text style={styles.menuItem}>
-                                                {this.props.translate(
-                                                  "account"
-                                                )}
-                                              </Text>
-                                              <View
-                                                style={{
-                                                  backgroundColor:
-                                                    global.intake_complete
-                                                      ? "#315731"
-                                                      : "#fe7675",
-                                                  padding: 6,
-                                                  paddingHorizontal: 12,
-                                                  marginLeft: 10,
-                                                  borderRadius: 20,
-                                                }}
-                                              >
-                                                <Text
-                                                  style={{ color: "white" }}
-                                                >
-                                                  {global.intake_complete
-                                                    ? "Complete 5/5"
-                                                    : "Complete  1/5"}
-                                                </Text>
-                                              </View>
-                                            </View>
-                                          </TouchableOpacity>
-                                          <View
-                                            style={{
-                                              flexDirection: "row",
-                                              justifyContent: "flex-start",
-                                              alignItems: "center",
-                                              marginBottom: 20,
-                                              width: "100%",
-                                            }}
-                                          >
-                                            {this.state.insta != "" && (
-                                              <TouchableOpacity
-                                                onPress={() =>
-                                                  Linking.openURL(
-                                                    this.state.insta
-                                                  )
-                                                }
-                                              >
-                                                <ScalableImage
-                                                  source={require("./images/social/insta.png")}
-                                                  width={30}
-                                                  style={{ marginRight: 15 }}
-                                                />
-                                              </TouchableOpacity>
-                                            )}
-                                            {this.state.youtube != "" && (
-                                              <TouchableOpacity
-                                                onPress={() =>
-                                                  Linking.openURL(
-                                                    this.state.youtube
-                                                  )
-                                                }
-                                              >
-                                                <ScalableImage
-                                                  source={require("./images/social/youtube.png")}
-                                                  width={40}
-                                                  style={{ marginRight: 15 }}
-                                                />
-                                              </TouchableOpacity>
-                                            )}
-                                            {this.state.twitter != "" && (
-                                              <TouchableOpacity
-                                                onPress={() =>
-                                                  Linking.openURL(
-                                                    this.state.twitter
-                                                  )
-                                                }
-                                              >
-                                                <ScalableImage
-                                                  source={require("./images/social/twitter.png")}
-                                                  width={40}
-                                                  style={{ marginRight: 15 }}
-                                                />
-                                              </TouchableOpacity>
-                                            )}
-                                            {this.state.fb != "" && (
-                                              <TouchableOpacity
-                                                onPress={() =>
-                                                  Linking.openURL(this.state.fb)
-                                                }
-                                              >
-                                                <ScalableImage
-                                                  source={require("./images/social/fb.png")}
-                                                  width={30}
-                                                  style={{ marginRight: 15 }}
-                                                />
-                                              </TouchableOpacity>
-                                            )}
-                                            {this.state.linkedin != "" && (
-                                              <TouchableOpacity
-                                                onPress={() =>
-                                                  Linking.openURL(
-                                                    this.state.linkedin
-                                                  )
-                                                }
-                                              >
-                                                <ScalableImage
-                                                  source={require("./images/social/LinkedIn.png")}
-                                                  width={30}
-                                                  style={{ marginRight: 15 }}
-                                                />
-                                              </TouchableOpacity>
-                                            )}
-                                          </View>
-                                          <Text
-                                            style={{
-                                              fontFamily: "Quicksand-Regular",
-                                              fontSize: 20,
-                                              marginBottom: 10,
-                                            }}
-                                          >
-                                            {this.props.translate(
-                                              "businessInfo"
-                                            )}
-                                          </Text>
-                                          <Text
-                                            style={{
-                                              fontFamily: "Quicksand-Regular",
-                                              fontSize: 15,
-                                              marginBottom: 10,
-                                            }}
-                                          >
-                                            {this.props.translate("address")}:{" "}
-                                            {this.state.businessAddress}
-                                          </Text>
-                                          <Text
-                                            style={{
-                                              fontFamily: "Quicksand-Regular",
-                                              fontSize: 15,
-                                              marginBottom: 10,
-                                            }}
-                                          >
-                                            {this.props.translate("email")}:{" "}
-                                            {this.state.businessEmail}
-                                          </Text>
-                                          <Text
-                                            style={{
-                                              fontFamily: "Quicksand-Regular",
-                                              fontSize: 15,
-                                              marginBottom: 15,
-                                            }}
-                                          >
-                                            {this.props.translate("phone")}:{" "}
-                                            {this.state.businessPhone}
-                                          </Text>
-                                        </ScrollView>
-                                      </BottomSheetView>
-                                    </BottomSheet>
-                                  </View>
+                                  <></>
                                 ) : (
                                   this.state.appoType == "all" && (
                                     <View style={styles.container1}>
@@ -1500,6 +1023,7 @@ export default class Dashboard extends Component {
                                     translate={this.props.translate}
                                     gotoChatBack={this.gotoChatBack}
                                     chatMsgs={this.state.chatMsgs}
+                                    background={this.state.colorBody}
                                   />
                                 ) : (
                                   <></>
@@ -1514,7 +1038,12 @@ export default class Dashboard extends Component {
                                   <></>
                                 )}
                                 {this.state.appoType == "inbox" ? (
-                                  <View style={styles.container1}>
+                                  <View
+                                    style={[
+                                      styles.container1,
+                                      { backgroundColor: this.state.colorBody },
+                                    ]}
+                                  >
                                     <View
                                       style={{
                                         flexDirection: "row",
@@ -1562,7 +1091,12 @@ export default class Dashboard extends Component {
                                   <></>
                                 )}
                                 {this.state.appoType == "app" ? (
-                                  <View style={styles.container1}>
+                                  <View
+                                    style={[
+                                      styles.container1,
+                                      { backgroundColor: this.state.colorTop },
+                                    ]}
+                                  >
                                     <View
                                       style={{
                                         flexDirection: "row",
@@ -1601,18 +1135,9 @@ export default class Dashboard extends Component {
                                     <ScrollView
                                       style={{
                                         marginTop: 15,
-                                        backgroundColor: "#152030",
+                                        backgroundColor: this.state.colorBody,
                                       }}
                                     >
-                                      {/* <View style={{ marginTop: 10, alignItems: "center", justifyContent:"center", flexDirection: 'row'}}>
-												<Text onPress={() => this.changeAppoButtonType("ability")} allowFontScaling={false} style={this.state.appoButtonType != "his" ? (styles.appoButtonAct) : (styles.appoButton)}>{this.props.translate("availability")}</Text>
-												<Text onPress={() => this.changeAppoButtonType("his")} allowFontScaling={false} style={this.state.appoButtonType == "his" ? (styles.appoButtonAct) : (styles.appoButton)}>{this.props.translate("history")}</Text>
-											</View>
-											{this.state.appoButtonType == "his" ? (
-												<All_appointments translate = {this.props.translate} appoType = {"all"}  searchGlossary={this.searchGlossary1} />
-											):(
-												<Availability_appointments translate = {this.props.translate} appoType = {"all"}  searchGlossary={this.searchGlossary1} />
-											)} */}
                                       <Text style={styles.appoButton}>
                                         {this.props.translate("upcoming")}
                                       </Text>
@@ -1643,6 +1168,474 @@ export default class Dashboard extends Component {
                 )}
               </>
             )}
+            <View
+              style={{
+                display: this.state.appoType == "coming" ? "flex" : "none",
+                height: "100%",
+              }}
+            >
+              {!this.state.logoLoaded && (
+                <View
+                  style={[
+                    styles.container,
+                    {
+                      height: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: this.state.colorBody || "#2e3643",
+                      position: "absolute",
+                      width: "100%",
+                      zIndex: 1,
+                    },
+                  ]}
+                >
+                  <Progress.Circle size={30} indeterminate={true} />
+                </View>
+              )}
+              <View style={styles.container0}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: this.state.colorTop,
+                    paddingVertical: 15,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => this.gotoSite()}
+                    style={{
+                      paddingTop: 20,
+                      textAlign: "left",
+                      marginLeft: 40,
+                      width: "40%",
+                    }}
+                  >
+                    {this.state.logo && (
+                      <ImageOrSvg
+                        height="50"
+                        uri={this.state.logo} // Remote SVG URL
+                        handleLoaded={this.handleLogoLoaded}
+                      />
+                    )}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.changeDisplayMenu(1)}
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "flex-end",
+                      alignItems: "center",
+                      width: "48%",
+                      marginLeft: "2%",
+                      paddingRight: 30,
+                    }}
+                  >
+                    {this.state.userAvatar && (
+                      <ImageOrSvg
+                        width="40"
+                        height="40"
+                        uri={this.state.userAvatar} // Remote SVG URL
+                        handleLoaded={this.handleLoaded}
+                      />
+                    )}
+                  </TouchableOpacity>
+                </View>
+
+                <ScrollView
+                  style={{
+                    paddingHorizontal: 0,
+                    backgroundColor: this.state.colorBody,
+                  }}
+                >
+                  {this.state.DashboardItems?.sections &&
+                    this.state.DashboardItems.sections.map((section, index) => (
+                      <View key={index}>
+                        {section.content == "slider" && (
+                          <BlockSlider
+                            sliderItems={this.state.DashboardItems.sliders.data}
+                            duration={
+                              this.state.DashboardItems.sliders.duration
+                            }
+                            gotoPage={this.gotoPage}
+                          />
+                        )}
+                        {section.content == "status" && (
+                          <BlockStatus
+                            status={section}
+                            onStatusPress={() => {
+                              this.setState({
+                                appoType: "status",
+                              });
+                            }}
+                          />
+                        )}
+                        {section.content == "boxs2" && (
+                          <BlockBoxs boxs={section} gotoPage={this.gotoPage} />
+                        )}
+                        {section.content == "posts" && (
+                          <BlockPosts posts={this.state.DashboardItems.posts} />
+                        )}
+                        {section.content == "button" && (
+                          <BlockButton
+                            button={section}
+                            gotoPage={this.gotoPage}
+                          />
+                        )}
+                      </View>
+                    ))}
+                </ScrollView>
+                {this.state.bottomVisible == 1 && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                      backgroundColor: this.state.colorBottom,
+                      paddingVertical: 15,
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => this.gotoMenuItem(1)}
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {this.state.footerIcon1 && (
+                        <ImageOrSvg
+                          width="40"
+                          height="40"
+                          uri={this.state.footerIcon1} // Remote SVG URL
+                          handleLoaded={this.handleLoaded}
+                        />
+                      )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      // onPress={() =>
+                      //   this.changeDisplayMenu(true)
+                      // }
+                      onPress={() => this.gotoHome()}
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {this.state.footerIcon2 && (
+                        <ImageOrSvg
+                          width="40"
+                          height="40"
+                          uri={this.state.footerIcon2} // Remote SVG URL
+                          handleLoaded={this.handleLoaded}
+                        />
+                      )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => this.gotoMenuItem(2)}
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {this.state.footerIcon3 && (
+                        <ImageOrSvg
+                          width="40"
+                          height="40"
+                          uri={this.state.footerIcon3} // Remote SVG URL
+                          handleLoaded={this.handleLoaded}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                )}
+                <BlurView
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                  blurType="dark"
+                  blurAmount={10}
+                  reducedTransparencyFallbackColor="black"
+                  onPress={() => {
+                    this.closeOverlayAndMenu();
+                  }}
+                />
+                {this.state.appoType == "coming" && (
+                  <BottomSheet
+                    backgroundComponent={CustomBackground}
+                    onChange={this.handleSheetChanges}
+                    ref={this.sheetRef}
+                    index={-1}
+                    enablePanDownToClose={true}
+                    snapPoints={["90%", "90%", "90%"]}
+                  >
+                    <BottomSheetView
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <ScrollView
+                        style={{
+                          paddingHorizontal: 20,
+                          paddingBottom: 20,
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            marginBottom: 5,
+                            width: "100%",
+                          }}
+                        >
+                          <Text
+                            allowFontScaling={false}
+                            style={{
+                              textAlign: "left",
+                              fontFamily: "Quicksand-Regular",
+                              fontSize: 30,
+                              fontWeight: "bold",
+                              marginVertical: 10,
+                              color: "#AFBDC4",
+                              width: "85%",
+                              paddingBottom: 15,
+                            }}
+                          >
+                            {this.props.translate("menu")}
+                          </Text>
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.closeOverlayAndMenu();
+                            }}
+                          >
+                            <ScalableImage
+                              source={require("./images/close.png")}
+                              width={15}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity
+                          onPress={() => this.gotoMenuItem(1)}
+                          style={styles.menuWrap}
+                        >
+                          <ScalableImage
+                            source={require("./images/appointment_icon.png")}
+                            width={30}
+                            style={{ marginRight: 10 }}
+                          />
+                          <Text style={styles.menuItem}>
+                            {this.props.translate("appointments")}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => this.gotoMenuItem(2)}
+                          style={styles.menuWrap}
+                        >
+                          <ScalableImage
+                            source={require("./images/chat_icon.png")}
+                            width={30}
+                            style={{ marginRight: 10 }}
+                          />
+                          <View style={{ flexDirection: "row" }}>
+                            <Text style={styles.menuItem}>
+                              {this.props.translate("chatwithsupport")}
+                            </Text>
+                            {this.state.badgeCount > 0 && (
+                              <Badge
+                                value={this.state.badgeCount}
+                                status="error"
+                                left={5}
+                                top={5}
+                              />
+                            )}
+                          </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                          onPress={() => this.gotoMenuItem(4)}
+                          style={styles.menuWrap}
+                        >
+                          <ScalableImage
+                            source={require("./images/question_icon.png")}
+                            width={30}
+                            style={{ marginRight: 10 }}
+                          />
+                          <Text style={styles.menuItem}>
+                            {this.props.translate("questions")}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => this.gotoMenuItem(5)}
+                          style={styles.menuWrap}
+                        >
+                          <ScalableImage
+                            source={require("./images/inbox_icon_1.png")}
+                            width={30}
+                            style={{ marginRight: 10 }}
+                          />
+                          <View style={{ flexDirection: "row" }}>
+                            <Text style={styles.menuItem}>
+                              {this.props.translate("inbox")}
+                            </Text>
+                            {this.state.badgeInboxCount > 0 && (
+                              <Badge
+                                value={this.state.badgeInboxCount}
+                                status="error"
+                                left={5}
+                                top={5}
+                              />
+                            )}
+                          </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => this.gotoMenuItem(6)}
+                          style={styles.menuWrap}
+                        >
+                          <ScalableImage
+                            source={require("./images/Account_icon.png")}
+                            width={30}
+                            style={{ marginRight: 10 }}
+                          />
+                          <View style={{ flexDirection: "row" }}>
+                            <Text style={styles.menuItem}>
+                              {this.props.translate("account")}
+                            </Text>
+                            <View
+                              style={{
+                                backgroundColor: global.intake_complete
+                                  ? "#315731"
+                                  : "#fe7675",
+                                padding: 6,
+                                paddingHorizontal: 12,
+                                marginLeft: 10,
+                                borderRadius: 20,
+                              }}
+                            >
+                              <Text style={{ color: "white" }}>
+                                {global.intake_complete
+                                  ? "Complete 5/5"
+                                  : "Complete  1/5"}
+                              </Text>
+                            </View>
+                          </View>
+                        </TouchableOpacity>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                            marginBottom: 20,
+                            width: "100%",
+                          }}
+                        >
+                          {this.state.insta != "" && (
+                            <TouchableOpacity
+                              onPress={() => Linking.openURL(this.state.insta)}
+                            >
+                              <ScalableImage
+                                source={require("./images/social/insta.png")}
+                                width={30}
+                                style={{ marginRight: 15 }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.youtube != "" && (
+                            <TouchableOpacity
+                              onPress={() =>
+                                Linking.openURL(this.state.youtube)
+                              }
+                            >
+                              <ScalableImage
+                                source={require("./images/social/youtube.png")}
+                                width={40}
+                                style={{ marginRight: 15 }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.twitter != "" && (
+                            <TouchableOpacity
+                              onPress={() =>
+                                Linking.openURL(this.state.twitter)
+                              }
+                            >
+                              <ScalableImage
+                                source={require("./images/social/twitter.png")}
+                                width={40}
+                                style={{ marginRight: 15 }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.fb != "" && (
+                            <TouchableOpacity
+                              onPress={() => Linking.openURL(this.state.fb)}
+                            >
+                              <ScalableImage
+                                source={require("./images/social/fb.png")}
+                                width={30}
+                                style={{ marginRight: 15 }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.linkedin != "" && (
+                            <TouchableOpacity
+                              onPress={() =>
+                                Linking.openURL(this.state.linkedin)
+                              }
+                            >
+                              <ScalableImage
+                                source={require("./images/social/LinkedIn.png")}
+                                width={30}
+                                style={{ marginRight: 15 }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 20,
+                            marginBottom: 10,
+                          }}
+                        >
+                          {this.props.translate("businessInfo")}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 15,
+                            marginBottom: 10,
+                          }}
+                        >
+                          {this.props.translate("address")}:{" "}
+                          {this.state.businessAddress}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 15,
+                            marginBottom: 10,
+                          }}
+                        >
+                          {this.props.translate("email")}:{" "}
+                          {this.state.businessEmail}
+                        </Text>
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 15,
+                            marginBottom: 15,
+                          }}
+                        >
+                          {this.props.translate("phone")}:{" "}
+                          {this.state.businessPhone}
+                        </Text>
+                      </ScrollView>
+                    </BottomSheetView>
+                  </BottomSheet>
+                )}
+              </View>
+            </View>
           </>
         ) : (
           <></>
@@ -1790,7 +1783,7 @@ const styles = StyleSheet.create({
   },
   appoButtonAct: {
     fontFamily: "Quicksand-Regular",
-    color: "#fff",
+    color: "#000",
     fontSize: 20,
     textAlign: "center",
     marginBottom: 5,
@@ -1801,7 +1794,7 @@ const styles = StyleSheet.create({
   },
   appoButton: {
     fontFamily: "Quicksand-Regular",
-    color: "#fff",
+    color: "#000",
     fontSize: 20,
     textAlign: "center",
     marginBottom: 5,

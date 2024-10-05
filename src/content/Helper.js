@@ -38,6 +38,9 @@ export async function requestCameraPermission() {
       console.log("Camera permission denied");
       return false;
     }
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+    );
   } catch (err) {
     console.warn(err);
     return false;

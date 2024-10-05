@@ -16,6 +16,9 @@ export default class ImageOrSvg extends Component {
     super(props);
     this.state = {};
   }
+  handleLoad = () => {
+    this.props.handleLoaded();
+  };
   render() {
     return (
       <>
@@ -25,11 +28,13 @@ export default class ImageOrSvg extends Component {
             width={this.props.width || 40}
             height={this.props.height || 40}
             uri={this.props.uri} // Remote SVG URL
+            onLoad={() => this.handleLoad()}
           />
         ) : (
           <ScalableImage
             source={{ uri: this.props.uri }}
             height={parseInt(this.props.height) || 50}
+            onLoad={() => this.handleLoad()}
           />
         )}
       </>

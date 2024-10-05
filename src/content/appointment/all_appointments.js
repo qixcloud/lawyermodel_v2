@@ -108,7 +108,7 @@ const AllAppointments = ({ items, translate }) => {
           allowFontScaling={false}
           style={{
             fontFamily: "Eina03-Regular",
-            color: "#fff",
+            color: "#000",
             fontSize: DeviceInfo.isTablet() ? 22 : 15,
             marginTop: DeviceInfo.isTablet() ? 50 : 35,
           }}
