@@ -416,344 +416,361 @@ export default class Signup extends Component {
           <></>
         )}
         {!this.state.next && this.state.back === 0 ? (
-          <View style={styles.container}>
-            <View
-              // keyboardVerticalOffset={keyboardVerticalOffset}
-              style={styles.form}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => this.gotoSite()}
-                  style={{ paddingTop: 20 }}
-                >
-                  <Image
-                    source={global.logo}
-                    style={{ width: 50, height: 50 }}
-                  />
-                </TouchableOpacity>
-                <View style={{ paddingTop: 25, width: "70%" }}>
-                  <Text
-                    style={{
-                      fontFamily: "Quicksand-Bold",
-                      fontSize: 25,
-                      color: "#afbec5",
-                      textAlign: "right",
-                    }}
-                  >
-                    {this.props.translate("signup")}
-                  </Text>
-                </View>
-              </View>
-              {this.state.isDialogVisible ? (
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            // keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+          >
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+              <View style={styles.container}>
                 <View
-                  style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  // keyboardVerticalOffset={keyboardVerticalOffset}
+                  style={styles.form}
                 >
-                  <KeyboardAvoidingView
+                  <View
                     style={{
-                      backgroundColor: "#e4e5e7",
-                      padding: 15,
-                      width: 300,
-                      borderRadius: 10,
-                      marginBottom: 100,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <ScalableImage
-                      source={require("./images/verify.png")}
-                      width={200}
-                      style={{ marginLeft: 50 }}
-                    />
-                    <Text
-                      allowFontScaling={false}
-                      style={{
-                        textAlign: "center",
-                        fontFamily: "Quicksand-Regular",
-                        fontSize: 25,
-                        fontWeight: "bold",
-                        marginVertical: 10,
-                      }}
+                    <TouchableOpacity
+                      onPress={() => this.gotoSite()}
+                      style={{ paddingTop: 20 }}
                     >
-                      Verify
-                    </Text>
-                    <TextInput
-                      onChangeText={(text) =>
-                        this.setState({ checkVerifyTxt: text })
-                      }
-                      style={styles.input}
-                      placeholder="Please input Verification code."
-                      placeholderTextColor="#555"
-                      keyboardType={"numeric"}
-                    ></TextInput>
+                      <Image
+                        source={global.logo}
+                        style={{ width: 50, height: 50 }}
+                      />
+                    </TouchableOpacity>
+                    <View style={{ paddingTop: 25, width: "70%" }}>
+                      <Text
+                        style={{
+                          fontFamily: "Quicksand-Bold",
+                          fontSize: 25,
+                          color: "#afbec5",
+                          textAlign: "right",
+                        }}
+                      >
+                        {this.props.translate("signup")}
+                      </Text>
+                    </View>
+                  </View>
+                  {this.state.isDialogVisible ? (
                     <View
                       style={{
-                        flexDirection: "row",
+                        flex: 1,
                         justifyContent: "center",
                         alignItems: "center",
                       }}
                     >
-                      <TouchableOpacity
-                        onPress={() => this.hideDialog()}
-                        style={styles.button}
+                      <KeyboardAvoidingView
+                        style={{
+                          backgroundColor: "#e4e5e7",
+                          padding: 15,
+                          width: 300,
+                          borderRadius: 10,
+                          marginBottom: 100,
+                        }}
                       >
+                        <ScalableImage
+                          source={require("./images/verify.png")}
+                          width={200}
+                          style={{ marginLeft: 50 }}
+                        />
                         <Text
+                          allowFontScaling={false}
                           style={{
-                            fontFamily: "Quicksand-Regular",
                             textAlign: "center",
-                            fontSize: 20,
-                            color: "#fff",
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 25,
+                            fontWeight: "bold",
+                            marginVertical: 10,
                           }}
                         >
-                          {this.props.translate("cancel")}
+                          Verify
                         </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => this.checkVerify()}
-                        style={styles.button}
-                      >
-                        <Text
+                        <TextInput
+                          onChangeText={(text) =>
+                            this.setState({ checkVerifyTxt: text })
+                          }
+                          style={styles.input}
+                          placeholder="Please input Verification code."
+                          placeholderTextColor="#555"
+                          keyboardType={"numeric"}
+                        ></TextInput>
+                        <View
                           style={{
-                            fontFamily: "Quicksand-Regular",
-                            textAlign: "center",
-                            fontSize: 20,
-                            color: "#fff",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
                           }}
                         >
-                          {this.props.translate("submit")}
-                        </Text>
-                      </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => this.hideDialog()}
+                            style={styles.button}
+                          >
+                            <Text
+                              style={{
+                                fontFamily: "Quicksand-Regular",
+                                textAlign: "center",
+                                fontSize: 20,
+                                color: "#fff",
+                              }}
+                            >
+                              {this.props.translate("cancel")}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => this.checkVerify()}
+                            style={styles.button}
+                          >
+                            <Text
+                              style={{
+                                fontFamily: "Quicksand-Regular",
+                                textAlign: "center",
+                                fontSize: 20,
+                                color: "#fff",
+                              }}
+                            >
+                              {this.props.translate("submit")}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </KeyboardAvoidingView>
                     </View>
-                  </KeyboardAvoidingView>
+                  ) : (
+                    <>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: "space-between",
+                          paddingHorizontal: "10%",
+                        }}
+                      >
+                        <View style={{ marginTop: 50 }}>
+                          <TextInput
+                            onBlur={checkSecondStep}
+                            value={this.state.inputName}
+                            onChangeText={(text) =>
+                              this.setState({ inputName: text })
+                            }
+                            style={styles.input}
+                            placeholder={this.props.translate("name")}
+                            placeholderTextColor="#afbec5"
+                          />
+                          <View
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              width: "100%",
+                            }}
+                          >
+                            <TextInput
+                              value={this.state.countryCode}
+                              onChangeText={(text) => {
+                                let countryCode = "";
+
+                                text = text.replace(/[^0-9]/g, "");
+
+                                if (text.length > 0) {
+                                  countryCode = "+";
+                                }
+
+                                countryCode += text.slice(0, 3);
+
+                                this.setState({
+                                  countryCode: countryCode,
+                                });
+                              }}
+                              style={[styles.input, { width: "10%" }]}
+                            />
+                            <TextInput
+                              onBlur={checkSecondStep}
+                              value={this.state.inputPhone}
+                              onChangeText={(text) =>
+                                this.setState({ inputPhone: formatPhone(text) })
+                              }
+                              style={[styles.input, { width: "89%" }]}
+                              placeholder={this.props.translate("phone")}
+                              placeholderTextColor="#afbec5"
+                              keyboardType={"numeric"}
+                            />
+                          </View>
+                          <TextInput
+                            onBlur={checkSecondStep}
+                            value={this.state.inputEmail}
+                            onChangeText={(text) =>
+                              this.setState({ inputEmail: text.trim() })
+                            }
+                            style={styles.input}
+                            placeholder={this.props.translate("email")}
+                            placeholderTextColor="#afbec5"
+                          />
+
+                          <Text
+                            style={{ fontSize: 11, color: "red", padding: 5 }}
+                          >
+                            {this.state.errortxt}
+                          </Text>
+                          <View style={{ height: 150, width: 2 }} />
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                          }}
+                        >
+                          <View
+                            style={{
+                              height: 25,
+                              width: 25,
+                              borderRadius: 25,
+                              backgroundColor: this.state.termsAndConditions
+                                ? "#5fab78"
+                                : "#ea5d59",
+                              marginRight: 10,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: "Quicksand-Regular",
+                              fontSize: 18,
+                              color: "#afbec5",
+                            }}
+                          >
+                            {this.props.translate("termsAndCondition")}
+                          </Text>
+                        </View>
+
+                        <View
+                          style={{
+                            backgroundColor: "#333b48",
+                            marginTop: 30,
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.setState({
+                                termsAndConditions:
+                                  !this.state.termsAndConditions,
+                              });
+                            }}
+                            style={{
+                              height: 30,
+                              width: 30,
+                              borderColor: "white",
+                              borderWidth: 2,
+                              marginVertical: 10,
+                              marginLeft: 10,
+                              justifyContent: "center",
+                            }}
+                          >
+                            {this.state.termsAndConditions ? (
+                              <Icon
+                                name="check"
+                                type="font-awesome"
+                                color={"white"}
+                                size={15}
+                              />
+                            ) : null}
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              fontFamily: "Quicksand-Regular",
+                              fontSize: 13,
+                              color: "#589cdd",
+                              marginLeft: 10,
+                              padding: 10,
+                              width: "80%",
+                            }}
+                            onPress={() =>
+                              Linking.openURL(this.state.termsOfService)
+                            }
+                          >
+                            {/* {this.props.translate("AcceptTermsAndCondition")} */}
+                            You agree to receive SMS messages to your phone
+                            number from {this.state.appName} and to the terms of
+                            the Privacy Policy. If you wish to cancel the SMS
+                            messaging service, just reply “STOP.” If you have
+                            any other questions, please contact your support
+                            representative.
+                          </Text>
+                        </View>
+                      </View>
+                    </>
+                  )}
                 </View>
-              ) : (
-                <>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    marginTop: 10,
+                    marginBottom: 0,
+                    backgroundColor: "#2e3643",
+                  }}
+                >
                   <View
                     style={{
-                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginTop: 20,
                       flex: 1,
-                      width: "80%",
                     }}
                   >
-                    <View style={{ marginTop: 50 }}>
-                      <TextInput
-                        onBlur={checkSecondStep}
-                        value={this.state.inputName}
-                        onChangeText={(text) =>
-                          this.setState({ inputName: text })
-                        }
-                        style={styles.input}
-                        placeholder={this.props.translate("name")}
-                        placeholderTextColor="#afbec5"
-                      />
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          width: "100%",
-                        }}
-                      >
-                        <TextInput
-                          value={this.state.countryCode}
-                          onChangeText={(text) => {
-                            let countryCode = "";
-
-                            text = text.replace(/[^0-9]/g, "");
-
-                            if (text.length > 0) {
-                              countryCode = "+";
-                            }
-
-                            countryCode += text.slice(0, 3);
-
-                            this.setState({
-                              countryCode: countryCode,
-                            });
-                          }}
-                          style={[styles.input, { width: "10%" }]}
-                        />
-                        <TextInput
-                          onBlur={checkSecondStep}
-                          value={this.state.inputPhone}
-                          onChangeText={(text) =>
-                            this.setState({ inputPhone: formatPhone(text) })
-                          }
-                          style={[styles.input, { width: "89%" }]}
-                          placeholder={this.props.translate("phone")}
-                          placeholderTextColor="#afbec5"
-                          keyboardType={"numeric"}
-                        />
-                      </View>
-                      <TextInput
-                        onBlur={checkSecondStep}
-                        value={this.state.inputEmail}
-                        onChangeText={(text) =>
-                          this.setState({ inputEmail: text.trim() })
-                        }
-                        style={styles.input}
-                        placeholder={this.props.translate("email")}
-                        placeholderTextColor="#afbec5"
-                      />
-
-                      <Text style={{ fontSize: 11, color: "red", padding: 5 }}>
-                        {this.state.errortxt}
-                      </Text>
-                      <View style={{ height: 150, width: 2 }} />
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                      }}
+                    <TouchableOpacity
+                      onPress={() => this.props.gotoSignUpBack()}
                     >
-                      <View
-                        style={{
-                          height: 25,
-                          width: 25,
-                          borderRadius: 25,
-                          backgroundColor: this.state.termsAndConditions
-                            ? "#5fab78"
-                            : "#ea5d59",
-                          marginRight: 10,
-                        }}
-                      />
                       <Text
                         style={{
-                          fontFamily: "Quicksand-Regular",
-                          fontSize: 18,
-                          color: "#afbec5",
+                          textAlign: "center",
+                          fontSize: 20,
+                          color: "#fff",
                         }}
                       >
-                        {this.props.translate("termsAndCondition")}
+                        {this.props.translate("back")}
                       </Text>
-                    </View>
-
-                    <View
-                      style={{
-                        backgroundColor: "#333b48",
-                        marginTop: 30,
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.setState({
-                            termsAndConditions: !this.state.termsAndConditions,
-                          });
-                        }}
-                        style={{
-                          height: 30,
-                          width: 30,
-                          borderColor: "white",
-                          borderWidth: 2,
-                          marginVertical: 10,
-                          marginLeft: 10,
-                          justifyContent: "center",
-                        }}
-                      >
-                        {this.state.termsAndConditions ? (
-                          <Icon
-                            name="check"
-                            type="font-awesome"
-                            color={"white"}
-                            size={15}
-                          />
-                        ) : null}
-                      </TouchableOpacity>
-                      <Text
-                        style={{
-                          fontFamily: "Quicksand-Regular",
-                          fontSize: 13,
-                          color: "#589cdd",
-                          marginLeft: 10,
-                          padding: 10,
-                          width: "80%",
-                        }}
-                        onPress={() =>
-                          Linking.openURL(this.state.termsOfService)
-                        }
-                      >
-                        {/* {this.props.translate("AcceptTermsAndCondition")} */}
-                        You agree to receive SMS messages to your phone number
-                        from {this.state.appName} and to the terms of the
-                        Privacy Policy. If you wish to cancel the SMS messaging
-                        service, just reply “STOP.” If you have any other
-                        questions, please contact your support representative.
-                      </Text>
-                    </View>
+                    </TouchableOpacity>
                   </View>
-                </>
-              )}
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                marginTop: 10,
-                marginBottom: 0,
-                backgroundColor: "#2e3643",
-              }}
-            >
-              <View
-                style={{
-                  alignItems: "center",
-                  marginTop: 20,
-                  flex: 1,
-                }}
-              >
-                <TouchableOpacity onPress={() => this.props.gotoSignUpBack()}>
-                  <Text
+                  <View
                     style={{
-                      textAlign: "center",
-                      fontSize: 20,
-                      color: "#fff",
+                      alignItems: "center",
+                      flex: 1,
                     }}
                   >
-                    {this.props.translate("back")}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  alignItems: "center",
-                  flex: 1,
-                }}
-              >
-                <TouchableOpacity
-                  disabled={!isFormFull()}
-                  onPress={this.handleSignUp}
-                  style={[
-                    styles.button,
-                    { backgroundColor: !isFormFull() ? "grey" : "#599cdd" },
-                  ]}
-                >
-                  {this.state.loading ? (
-                    <ActivityIndicator color={"white"} />
-                  ) : (
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        fontSize: 20,
-                        color: "#fff",
-                      }}
+                    <TouchableOpacity
+                      disabled={!isFormFull()}
+                      onPress={this.handleSignUp}
+                      style={[
+                        styles.button,
+                        { backgroundColor: !isFormFull() ? "grey" : "#599cdd" },
+                      ]}
                     >
-                      {this.props.translate("next")}
-                    </Text>
-                  )}
-                </TouchableOpacity>
+                      {this.state.loading ? (
+                        <ActivityIndicator color={"white"} />
+                      ) : (
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            fontSize: 20,
+                            color: "#fff",
+                          }}
+                        >
+                          {this.props.translate("next")}
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      height: Platform.OS === "ios" ? 80 : 80,
+                      width: 2,
+                    }}
+                  ></View>
+                </View>
               </View>
-              <View
-                style={{ height: Platform.OS === "ios" ? 80 : 80, width: 2 }}
-              ></View>
-            </View>
-          </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
         ) : (
           <></>
         )}
