@@ -30,7 +30,12 @@ import ScalableImage from "react-native-scalable-image";
 import messaging from "@react-native-firebase/messaging";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import ImageOrSvg from "./dashboardBlocks/imageOrSvg";
-import { appId, getHeaders, getDashboardItems } from "./Helper";
+import {
+  appId,
+  getHeaders,
+  getDashboardItems,
+  requestNotificationPermission,
+} from "./Helper";
 import { color } from "react-native-reanimated";
 import * as Progress from "react-native-progress";
 let uniqueId = DeviceInfo.getUniqueId();
@@ -84,6 +89,10 @@ export default class Login extends Component {
     } else {
       this.setState({ signinStep: 1 });
     }
+    const hasCameraPermission = await requestNotificationPermission();
+    if (!hasCameraPermission) {
+      //return Alert.alert("Notification permissions denied");
+    }
   };
 
   getSliderItems = async () => {
@@ -98,6 +107,7 @@ export default class Login extends Component {
     });
 
     this.setState({ loaded: true });
+    this.setState({ logoLoaded: true });
     /*
     if (global.lang === "en") {
       const data = [

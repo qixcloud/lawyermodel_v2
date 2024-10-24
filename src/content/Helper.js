@@ -13,12 +13,36 @@ export const apiSecret =
 export const projectId = 156794;
 export const appId = "BC0HvnD7d1OCHhqPDqtH";
 
+export async function requestNotificationPermission() {
+  if (Platform.OS === "ios") {
+    return true;
+  }
+
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+    );
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+}
 export async function requestCameraPermission() {
   if (Platform.OS === "ios") {
     return true;
   }
 
   try {
+    await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      {
+        title: "Cool App Notification Permission",
+        message: "Cool App needs access to your Notification ",
+        buttonNeutral: "Ask Me Later",
+        buttonNegative: "Cancel",
+        buttonPositive: "OK",
+      }
+    );
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.CAMERA,
       {
@@ -38,9 +62,6 @@ export async function requestCameraPermission() {
       console.log("Camera permission denied");
       return false;
     }
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
-    );
   } catch (err) {
     console.warn(err);
     return false;
