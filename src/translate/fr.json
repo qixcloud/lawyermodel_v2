@@ -202,5 +202,7 @@
     "fourthDescriptionStatus": "Au cours du processus de découverte et avant le procès...",
     "fifthTitleStatus": "Préparation pour le règlement",
     "fifthDescriptionStatus": "La préparation pour le procès/règlement prend plusieurs semaines...",
-    "noPrevious": "No Previous Appointments yet"
+    "noPrevious": "No Previous Appointments yet",
+    "CheckYourMessages": "Check Your Messages",
+    "CheckYourMessageContent": "We sent you a 4-digit code to verify your identity. Please insert the code below to access your account."
 }

@@ -204,5 +204,7 @@
     "fourthDescriptionStatus": "During the discovery process and before the trial...",
     "fifthTitleStatus": "Preparing for Settlement",
     "fifthDescriptionStatus": "Preparing for trial/settlement takes several weeks...",
-    "noPrevious": "No Previous Appointments yet"
+    "noPrevious": "No Previous Appointments yet",
+    "CheckYourMessages": "Check Your Messages",
+    "CheckYourMessageContent": "We sent you a 4-digit code to verify your identity. Please insert the code below to access your account."
 }

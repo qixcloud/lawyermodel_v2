@@ -37,8 +37,8 @@ const SliderScreen = (props) => {
         const dashboardData = await getDashboardItems();
         //console.log("appName", dashboardData.appName);
         setAppName(dashboardData.appName); // Set data to state
-        setIntro(dashboardData.intro); // Set data to state
-        setData(dashboardData.intro.images); // Set data to state
+        setIntro(dashboardData.intro[global.lang]); // Set data to state
+        setData(dashboardData.intro[global.lang].images); // Set data to state
         //console.log(dashboardData.intro.images);
 
         if (Array.isArray(data) && activeSlide === data.length - 1) {
@@ -55,7 +55,6 @@ const SliderScreen = (props) => {
   }, [activeSlide]);
   const handleLoad = () => {
     setLoaded(true);
-    console.log("setLoaded");
   };
   const renderItem = ({ item, index }) => {
     if (index === data.length - 1) {
@@ -142,7 +141,7 @@ const SliderScreen = (props) => {
           borderRadius: 15,
           marginHorizontal: ITEM_SEPARATOR_WIDTH / 2,
         }}
-        resizeMode={"contain"}
+        resizeMode={"cover"}
         source={{ uri: item }}
         imageStyle={{ borderRadius: 10 }}
         onLoad={handleLoad}

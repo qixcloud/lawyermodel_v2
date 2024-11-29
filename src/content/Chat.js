@@ -55,6 +55,7 @@ export default class Chat extends Component {
       phoneNumber: "",
       imageLoading: false,
       noteId: "",
+      sendingMessage: false,
     };
     //console.log(this.props.chatMsgs);
 
@@ -139,7 +140,7 @@ export default class Chat extends Component {
     return filteredMessages;
   }
   async getMessages(jwt, conversationId) {
-    console.log("conversationId", conversationId);
+    // console.log("conversationId", conversationId);
     await axios({
       method: "get",
       headers: {
@@ -201,7 +202,7 @@ export default class Chat extends Component {
         .then(async (res) => {
           if (res?.data?.id) {
             const conversationId = res.data.id;
-            console.log("CONVERSATION ID ", conversationId);
+            // console.log("CONVERSATION ID ", conversationId);
             this.setState({ conversationId: conversationId });
 
             this.getMessages(jwt, conversationId).then(() => {
@@ -219,9 +220,9 @@ export default class Chat extends Component {
     }
   }
   componentDidUpdate() {}
-  _onSendFileProcessing = async (url, name, type) => {
+  _onSendFileProcessing = async (file, name, type) => {
     this.setState({ imageLoading: true });
-    const file = await convertImageToBase64(url);
+    //const file = await convertImageToBase64(url);
     const jwt = await AsyncStorage.getItem("jwtToken");
 
     var myHeaders = new Headers();
@@ -242,11 +243,12 @@ export default class Chat extends Component {
       body: raw,
       redirect: "follow",
     };
-
+    //console.log("myHeaders", myHeaders);
+    //console.log("conversationId", this.state.conversationId);
     fetch("https://api.qix.cloud/message", requestOptions)
       .then(async (result) => {
         const responseJson = await result.json();
-
+        console.log("responseJson", responseJson);
         if (responseJson) {
           const lastSeenEventIdKey = `lastSeenMessageId`;
           await AsyncStorage.setItem(
@@ -286,7 +288,8 @@ export default class Chat extends Component {
       console.log("Error camera", res.errorMessage);
     } else if (res?.assets?.length > 0) {
       const image = res.assets[0];
-      await this._onSendFileProcessing(image.uri, image.fileName, image.type);
+      const file = await convertImageToBase64(image.uri);
+      await this._onSendFileProcessing(file, image.fileName, image.type);
       await this.handleDocumentOperation(
         image.fileName,
         image.fileSize,
@@ -294,13 +297,24 @@ export default class Chat extends Component {
       );
     }
   };
-
+  readImageFromContentUri = async (contentUri) => {
+    try {
+      // Access the image content directly
+      const data = await ReactNativeBlobUtil.fs.readFile(contentUri, "base64");
+      return data;
+      // Now you have the image as a base64 string
+      //console.log("Image base64:", data);
+    } catch (error) {
+      console.error("Failed to read content URI:", error);
+    }
+  };
   fileBrowser = async () => {
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
       });
-      this._onSendFileProcessing(res.uri, res.name, res.type);
+      const file = await this.readImageFromContentUri(res.uri);
+      this._onSendFileProcessing(file, res.name, res.type);
     } catch (err) {
       //Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
@@ -338,15 +352,18 @@ export default class Chat extends Component {
   };
   _sendMessage() {
     // TODO
-    if (this.state.lastSentCount >= 3) {
-      Alert.alert(
-        "Please wait for reply. You can chat only 3 messages consecutively."
-      );
-      return;
-    }
+    // if (this.state.lastSentCount >= 3) {
+    //   Alert.alert(
+    //     "Please wait for reply. You can chat only 3 messages consecutively."
+    //   );
+    //   return;
+    // }
 
     if (this.state.inputBarText?.length > 150) {
       Alert.alert("You can use max 150 characters.");
+      return;
+    }
+    if (this.state.sendingMessage) {
       return;
     }
     sentCount++;
@@ -356,6 +373,7 @@ export default class Chat extends Component {
     }
   }
   sendMessage = async (txt) => {
+    this.setState({ sendingMessage: true });
     const jwt = await AsyncStorage.getItem("jwtToken");
 
     const myHeaders = new Headers();
@@ -393,6 +411,7 @@ export default class Chat extends Component {
             this.scrollView?.scrollToEnd({ animated: false });
           }, 50);
         }
+        this.setState({ sendingMessage: false });
       }
     );
   };
@@ -631,6 +650,7 @@ export default class Chat extends Component {
           onSendPressed={() => this._sendMessage()}
           onSendFilePressed={() => this._onSendFilePressed()}
           imageLoading={this.state.imageLoading}
+          sendingMessage={this.state.sendingMessage}
           onSizeChange={() => this._onInputSizeChange()}
           onChangeText={(text) => this._onChangeInputBarText(text)}
           getInputBarTextLength={this.getInputBarTextLength}
@@ -836,7 +856,7 @@ class MessageBubble extends Component {
                   {/*)}*/}
                   <Hyperlink
                     linkDefault={true}
-                    linkStyle={{ color: "#2980b9" }}
+                    linkStyle={() => ({ color: "#2980b9" })}
                   >
                     <Text style={bubbleTextStyle}>
                       {this.props.text
@@ -859,7 +879,7 @@ class MessageBubble extends Component {
                     <>
                       <Hyperlink
                         linkDefault={true}
-                        linkStyle={{ color: "#2980b9" }}
+                        linkStyle={() => ({ color: "#2980b9" })}
                       >
                         <Text style={bubbleTextStyle}>
                           {this.props.text
@@ -917,7 +937,7 @@ class MessageBubble extends Component {
                               }
                             >
                               <ScalableImage
-                                source={require("./images/file_icons/pdf.png")}
+                                source={require("./images/pdf.png")}
                                 width={50}
                               />
                               <Text style={{ color: "#fff" }}>{fileName}</Text>
@@ -1074,7 +1094,7 @@ class MessageBubble extends Component {
                 <View style={bubbleTextStyle}>
                   <Hyperlink
                     linkDefault={true}
-                    linkStyle={{ color: "#2980b9" }}
+                    linkStyle={() => ({ color: "#2980b9" })}
                   >
                     <Text
                       style={{ fontSize: DeviceInfo.isTablet() ? 27.2 : 16 }}
@@ -1169,20 +1189,26 @@ class InputBar extends Component {
               <ActivityIndicator color={"green"} />
             )}
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={() => this.props.onSendPressed()}
-          >
-            {/* <Text style={{color: 'white'}}>Send</Text> */}
-            <Image
-              source={require("./images/26send.png")}
-              style={{
-                width: DeviceInfo.isTablet() ? 42.5 : 30,
-                height: DeviceInfo.isTablet() ? 42.5 : 30,
-                marginRight: 30,
-              }}
-            />
-          </TouchableOpacity>
+          {this.props.sendingMessage ? (
+            <View style={{ paddingRight: 30 }}>
+              <ActivityIndicator color={"green"} />
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={() => this.props.onSendPressed()}
+            >
+              {/* <Text style={{color: 'white'}}>Send</Text> */}
+              <Image
+                source={require("./images/26send.png")}
+                style={{
+                  width: DeviceInfo.isTablet() ? 42.5 : 30,
+                  height: DeviceInfo.isTablet() ? 42.5 : 30,
+                  marginRight: 30,
+                }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );

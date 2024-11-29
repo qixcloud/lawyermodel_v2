@@ -13,16 +13,7 @@ import {
 } from "react-native";
 import SplashScreen from "./SplashScreen";
 import MySettings from "./settings";
-import Step1 from "./signup/step1";
-import Step2 from "./signup/step2";
-import Step3 from "./signup/step3";
-import Step4 from "./signup/step4";
-import Step5 from "./signup/step5";
-import Upload from "./signup/Upload";
-import Notifications from "./notifications/main";
-import Docusign from "./signup/Docusign";
 import Dashboard from "./Dashboard";
-import Extradata from "./Extradata";
 import Notification from "./Notifications";
 import Chat from "./Chat";
 import axios from "axios";
@@ -58,21 +49,21 @@ export default class SignUpStep1 extends Component {
   }
 
   getSliderItems = () => {
-    if (global.lang === "en") {
-      const data = [
-        require("../assets/sliders/home/Artboard1.jpg"),
-        require("../assets/sliders/home/Artboard2.jpg"),
-        require("../assets/sliders/home/Artboard3.jpg"),
-      ];
-      this.setState({ sliderItems: data });
-    } else {
-      const data = [
-        require("../assets/sliders/home/Artboard1_es.jpg"),
-        require("../assets/sliders/home/Artboard2_es.jpg"),
-        require("../assets/sliders/home/Artboard3_es.jpg"),
-      ];
-      this.setState({ sliderItems: data });
-    }
+    // if (global.lang === "en") {
+    //   const data = [
+    //     require("../assets/sliders/home/Artboard1.jpg"),
+    //     require("../assets/sliders/home/Artboard2.jpg"),
+    //     require("../assets/sliders/home/Artboard3.jpg"),
+    //   ];
+    //   this.setState({ sliderItems: data });
+    // } else {
+    //   const data = [
+    //     require("../assets/sliders/home/Artboard1_es.jpg"),
+    //     require("../assets/sliders/home/Artboard2_es.jpg"),
+    //     require("../assets/sliders/home/Artboard3_es.jpg"),
+    //   ];
+    //   this.setState({ sliderItems: data });
+    // }
   };
   handleShowSlider = async () => {
     const sliderViewed = await AsyncStorage.getItem("sliderViewed");
@@ -218,138 +209,7 @@ export default class SignUpStep1 extends Component {
                     <></>
                   )
                 ) : (
-                  <>
-                    {this.state.back === 1 ? (
-                      <SplashScreen />
-                    ) : (
-                      <>
-                        {this.state.social == 1 ? (
-                          <Extradata
-                            translate={this.props.translate}
-                            changeSocial={this.changeSocial}
-                          />
-                        ) : (
-                          <>
-                            {this.state.sign === 1 && this.state.step === 2 ? (
-                              <Docusign
-                                translate={this.props.translate}
-                                nextstep={this.nextstep}
-                                updatesign={this.updatesign}
-                              />
-                            ) : (
-                              <></>
-                            )}
-                            {this.state.upload === 1 &&
-                            this.state.step === 3 ? (
-                              <Upload
-                                translate={this.props.translate}
-                                nextstep={this.nextstep}
-                                updatestep={this.updatestep}
-                                files={this.state.files}
-                              />
-                            ) : (
-                              <></>
-                            )}
-                            {this.state.settings === 0 &&
-                            this.state.upload === 0 &&
-                            this.state.sign === 0 ? (
-                              <ScrollView style={styles.container}>
-                                <TouchableOpacity
-                                  onPress={() => this.gotoSite()}
-                                  style={{
-                                    flexDirection: "row",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <View
-                                    style={{ paddingTop: 25, width: "80%" }}
-                                  >
-                                    <Image
-                                      source={global.logo}
-                                      style={{ width: 50, height: 50 }}
-                                    />
-                                  </View>
-                                </TouchableOpacity>
-
-                                <View
-                                  style={{
-                                    marginTop: 20,
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {this.state.step === 1 ? (
-                                    <Step1
-                                      translate={this.props.translate}
-                                      gotoChat={this.gotoChat}
-                                      maxStep={this.state.maxStep}
-                                      completeSignup={this.completeSignup}
-                                      updatestep={this.updatestep}
-                                      nextstep={this.nextstep}
-                                      selectstep={this.selectstep}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {this.state.step === 2 ? (
-                                    <Step2
-                                      translate={this.props.translate}
-                                      maxStep={this.state.maxStep}
-                                      updatestep={this.updatestep}
-                                      nextstep={this.nextstep}
-                                      selectstep={this.selectstep}
-                                      updatesign={this.updatesign}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {this.state.step === 3 ? (
-                                    <Step3
-                                      translate={this.props.translate}
-                                      maxStep={this.state.maxStep}
-                                      updatefiles={this.updatefiles}
-                                      nextstep={this.nextstep}
-                                      selectstep={this.selectstep}
-                                      updatestep={this.updatestep}
-                                      gotoUpload={this.gotoUpload}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {this.state.step === 4 ? (
-                                    <Step4
-                                      translate={this.props.translate}
-                                      maxStep={this.state.maxStep}
-                                      updatestep={this.updatestep}
-                                      completeSignup={this.completeSignup}
-                                      nextstep={this.nextstep}
-                                      selectstep={this.selectstep}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-                                  {this.state.step === 15 ? (
-                                    <Step5
-                                      translate={this.props.translate}
-                                      maxStep={this.state.maxStep}
-                                      updatestep={this.updatestep}
-                                      completeSignup={this.completeSignup}
-                                      nextstep={this.nextstep}
-                                      selectstep={this.selectstep}
-                                    />
-                                  ) : (
-                                    <></>
-                                  )}
-                                </View>
-                              </ScrollView>
-                            ) : (
-                              <></>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
+                  <>{this.state.back === 1 ? <SplashScreen /> : <></>}</>
                 )}
               </>
             )}

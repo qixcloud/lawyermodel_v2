@@ -160,7 +160,7 @@
     "search": "Buscar",
     "addPost": "Agregar publicación",
     "create": "Crear",
-    "insertPhoneNUmber": "Insertar número de teléfono",
+    "insertPhoneNUmber": "Insertar teléfono",
     "version": "versión",
     "editInfo": "Editar información",
     "more": "Más",
@@ -202,5 +202,7 @@
     "fourthDescriptionStatus": "Durante el proceso de descubrimiento y antes del juicio...",
     "fifthTitleStatus": "Preparándose para el acuerdo",
     "fifthDescriptionStatus": "La preparación para el juicio/acuerdo lleva varias semanas...",
-    "noPrevious": "No hay eventos previos"
+    "noPrevious": "No hay eventos previos",
+    "CheckYourMessages": "Revisa tus Mensajes",
+    "CheckYourMessageContent": "Le enviamos un código de 4 dígitos para verificar su identidad. Por favor inserte el código a continuación para acceder a su cuenta."
 }

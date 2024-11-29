@@ -30,6 +30,7 @@ import ScalableImage from "react-native-scalable-image";
 import messaging from "@react-native-firebase/messaging";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import ImageOrSvg from "./dashboardBlocks/imageOrSvg";
+import ConfirmInput from "./components/ConfirmInput";
 import {
   appId,
   getHeaders,
@@ -74,7 +75,7 @@ export default class Login extends Component {
     global.apps = [];
   }
   componentDidMount = async () => {
-    // console.log("MOUNTTT");
+    console.log("MOUNTTT");
     this.getSliderItems();
     if (this.props.phoneNumber != "") {
       this.checkLogin("");
@@ -97,8 +98,7 @@ export default class Login extends Component {
 
   getSliderItems = async () => {
     const dashboardItems = await getDashboardItems();
-    // console.log("dashboardItems", dashboardItems.sliders.data);
-    this.setState({ sliderItems: dashboardItems.sliders.data });
+    this.setState({ sliderItems: dashboardItems.sliders.data[global.lang] });
     this.setState({ colorTop: dashboardItems.colors.top });
     this.setState({ colorBody: dashboardItems.colors.body });
 
@@ -143,7 +143,6 @@ export default class Login extends Component {
       await AsyncStorage.setItem("projectId", mockProjectId);
       await AsyncStorage.setItem("phone", "+11234567890");
       this.setState({ sign: 1 });
-
       return;
     }
 
@@ -216,6 +215,10 @@ export default class Login extends Component {
       sendCode();
     }
   };
+
+  handleCodeFilled = (code) => {
+    this.setState({ checkVerifyTxt: code });
+  };
   setLoggedIn = (res) => {
     if (res.data.sign_in == "success") {
       global.contactId = res.data.data.contact_id;
@@ -238,6 +241,7 @@ export default class Login extends Component {
     this.setState({ signup: 1 });
   };
   checkVerify = () => {
+    if (this.state.checkVerifyTxt.length != 4) return;
     this.setState({ loadingFa: true });
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -523,80 +527,109 @@ export default class Login extends Component {
       <>
         {this.state.isDialogVisible ? (
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{
+              flex: 1,
+              justifyContent: "flex-start",
+              alignItems: "center",
+              padding: 20,
+            }}
           >
-            <KeyboardAvoidingView
+            <View style={{ marginVertical: 50 }}>
+              <TouchableOpacity onPress={() => this.gotoSite()}>
+                {this.state.logo && (
+                  <ImageOrSvg
+                    height="50"
+                    uri={this.state.logo} // Remote SVG URL
+                    handleLoaded={this.handleLoaded}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View
               style={{
-                backgroundColor: "#e4e5e7",
-                padding: 15,
-                width: 300,
-                borderRadius: 10,
-                marginBottom: 100,
+                flex: 0,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
               }}
             >
               <ScalableImage
-                source={require("./images/verify.png")}
-                width={200}
-                style={{ marginLeft: 50 }}
+                source={require("./images/code_bubble.png")}
+                width={Dimensions.get("window").width * 0.4}
+                style={{ marginRight: "5%" }}
               />
               <Text
                 allowFontScaling={false}
                 style={{
-                  textAlign: "center",
                   fontFamily: "Quicksand-Regular",
-                  fontSize: 25,
+                  fontSize: 28,
                   fontWeight: "bold",
-                  marginVertical: 10,
+                  maxWidth: "50%",
+                  color: "#333",
                 }}
               >
-                Verify
+                {this.props.translate("CheckYourMessages")}
               </Text>
-              <TextInput
-                onChangeText={(text) => this.setState({ checkVerifyTxt: text })}
-                style={styles.input}
-                placeholder="Please input Verification code."
-                placeholderTextColor="#555"
-                keyboardType={"numeric"}
-              ></TextInput>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+            </View>
+
+            <Text
+              allowFontScaling={false}
+              style={{
+                fontFamily: "Quicksand-Regular",
+                fontWeight: "bold",
+                color: "#333",
+                marginVertical: 30,
+              }}
+            >
+              {this.props.translate("CheckYourMessageContent")}
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 30,
+              }}
+            >
+              <ConfirmInput onCodeFilled={this.handleCodeFilled} />
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => this.checkVerify()}
+                style={styles.codeSubmitButton}
               >
-                <TouchableOpacity
-                  onPress={() => this.hideDialog()}
-                  style={styles.button}
+                <Text
+                  style={{
+                    fontFamily: "Quicksand-Regular",
+                    textAlign: "center",
+                    fontSize: 20,
+                    color: "#fff",
+                  }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "Quicksand-Regular",
-                      textAlign: "center",
-                      fontSize: 20,
-                      color: "#fff",
-                    }}
-                  >
-                    {this.props.translate("cancel")}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => this.checkVerify()}
-                  style={styles.button}
+                  {this.props.translate("submit")}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.hideDialog()}
+                style={styles.codeCancelButton}
+              >
+                <Text
+                  style={{
+                    fontFamily: "Quicksand-Regular",
+                    textAlign: "center",
+                    fontSize: 20,
+                    color: "#000",
+                  }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "Quicksand-Regular",
-                      textAlign: "center",
-                      fontSize: 20,
-                      color: "#fff",
-                    }}
-                  >
-                    {this.props.translate("submit")}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </KeyboardAvoidingView>
+                  {this.props.translate("cancel")}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
           <>
@@ -839,8 +872,10 @@ export default class Login extends Component {
                                             style={{
                                               width:
                                                 Dimensions.get("window").width *
-                                                0.8,
-                                              padding: 30,
+                                                0.9,
+                                              paddingVertical: 30,
+                                              paddingHorizontal: 0,
+                                              maxWidth: 280,
                                             }}
                                           >
                                             <View style={{ paddingTop: 0 }}>
@@ -1078,12 +1113,45 @@ const styles = StyleSheet.create({
   phoneInput: {
     // fontFamily: "Eina03-Regular",
     color: "#000",
-    fontSize: DeviceInfo.isTablet() ? 28 : 16,
+    fontSize: DeviceInfo.isTablet() ? 28 : 13,
     paddingLeft: 0,
     marginBottom: Platform.OS === "ios" ? -10 : 0,
     flex: 1,
     width: Dimensions.get("window").width * 0.45,
     paddingVertical: Platform.OS === "ios" ? 10 : 0,
+    maxWidth: 195,
+  },
+  codeSubmitButton: {
+    fontFamily: "Quicksand-Regular",
+    backgroundColor: "#599cdd",
+    padding: 10,
+    borderRadius: 50,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    width: Dimensions.get("window").width - 50,
+  },
+  verifyInput: {
+    fontFamily: "Quicksand-Regular",
+    borderRadius: 5,
+    color: "#000",
+    borderColor: "grey",
+    backgroundColor: "#eaebef",
+    fontSize: 25,
+    padding: 10,
+    marginBottom: 10,
+    width: 50,
+    marginHorizontal: 5,
+    textAlign: "center",
+  },
+  codeCancelButton: {
+    fontFamily: "Quicksand-Regular",
+    padding: 10,
+    borderRadius: 50,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#bbb",
+    width: Dimensions.get("window").width - 50,
   },
   button: {
     fontFamily: "Quicksand-Regular",

@@ -13,7 +13,7 @@ export default class BlockStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    // console.log(this.props.status);
+    //console.log(this.props.status);
   }
 
   render() {

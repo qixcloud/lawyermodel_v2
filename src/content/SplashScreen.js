@@ -18,8 +18,6 @@ import {
 } from "react-native";
 import MainView from "./MainView";
 import Login from "./Login";
-import StaffLogin from "./StaffLogin";
-import StaffDashboard from "./StaffDashboard";
 import Signup from "./Signup";
 import axios from "axios";
 import DeviceInfo from "react-native-device-info";
@@ -33,6 +31,7 @@ const translationGetters = {
   en: () => require("../translate/en.json"),
   es: () => require("../translate/es.json"),
   fr: () => require("../translate/fr.json"),
+  zh: () => require("../translate/zh.json"),
 };
 
 const translate = memoize(
@@ -53,6 +52,8 @@ const setI18nConfig = () => {
   // update layout direction
   I18nManager.forceRTL(isRTL);
   // set i18n-js config
+
+  console.log("languageTag", RNLocalize.getLocales());
   i18n.translations = { [languageTag]: translationGetters[languageTag]() };
   i18n.locale = languageTag;
   global.lang = languageTag;
@@ -256,14 +257,8 @@ export default class SplashScreen extends Component {
   gotoSignUpBack = () => {
     this.setState({ answer: 1 });
   };
-  gotoStaffLogin = () => {
-    this.setState({ staffLoginStatus: 1 });
-  };
   finishSignUp = async () => {
     this.setState({ answer: 1 });
-  };
-  gotoStaffDashboard = () => {
-    this.setState({ staffDashboardStatus: 1 });
   };
   gotoAppLogin = () => {
     this.setState({ staffLoginStatus: 0 });
@@ -290,208 +285,9 @@ export default class SplashScreen extends Component {
           </View>
         ) : (
           <>
-            {this.state.staffLoginStatus ? (
-              this.state.staffDashboardStatus ? (
-                <StaffDashboard
-                  translate={translate}
-                  phoneNumber={this.state.phoneNumber}
-                  gotoAppLogin={this.gotoAppLogin}
-                  signout={this.signout}
-                />
-              ) : (
-                <StaffLogin
-                  translate={translate}
-                  phoneNumber={this.state.phoneNumber}
-                  gotoStaffDashboard={this.gotoStaffDashboard}
-                  gotoAppLogin={this.gotoAppLogin}
-                />
-              )
-            ) : (
+            {this.state.answer === 1 ? (
               <>
-                {this.state.answer === 1 ? (
-                  <>
-                    {this.state.update == 0 && this.state.showBiometry ? (
-                      <View style={{ flex: 1 }}>
-                        <View style={styles.container}>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <View style={{ paddingTop: 25, width: "70%" }}>
-                              <Text
-                                style={{
-                                  fontFamily: "Quicksand-Bold",
-                                  fontSize: 25,
-                                  color: "#afbec5",
-                                }}
-                              >
-                                {translate("welcome")}
-                              </Text>
-                            </View>
-                            <TouchableOpacity
-                              onPress={() => this.gotoSite()}
-                              style={{ paddingTop: 20, textAlign: "right" }}
-                            >
-                              <Image
-                                source={global.logo}
-                                style={{ width: 50, height: 50 }}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                          <View
-                            style={{
-                              paddingBottom: 55,
-                              paddingTop: 25,
-                              width: "90%",
-                            }}
-                          >
-                            <Text
-                              style={{
-                                fontFamily: "Quicksand-Regular",
-                                fontSize: 15,
-                                color: "#333",
-                                width: "100%",
-                                textAlign: "right",
-                              }}
-                            >
-                              {translate("panswer")}
-                            </Text>
-                            <Text
-                              style={{
-                                fontFamily: "Quicksand-Regular",
-                                fontSize: 15,
-                                color: "#333",
-                                width: "100%",
-                                textAlign: "right",
-                              }}
-                            >
-                              {translate("theQuestionBelow")}
-                            </Text>
-                          </View>
-                          <View
-                            style={{
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <View
-                              style={{
-                                width: Dimensions.get("window").width * 0.8,
-                                backgroundColor: "white",
-                                borderRadius: 5,
-                                padding: 20,
-                              }}
-                            >
-                              <TouchableOpacity
-                                onPress={() => this.checkBiometric()}
-                                style={styles.button}
-                              >
-                                <Text
-                                  style={{
-                                    fontFamily: "Quicksand-Regular",
-                                    textAlign: "center",
-                                    fontSize: 20,
-                                    color: "#fff",
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                  }}
-                                >
-                                  {translate("tryagain")}
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                            <View
-                              style={{
-                                width: Dimensions.get("window").width * 0.8,
-                                backgroundColor: "white",
-                                borderRadius: 5,
-                                padding: 20,
-                              }}
-                            >
-                              <TouchableOpacity
-                                onPress={() => this.signinwithcode()}
-                                style={styles.button}
-                              >
-                                <Text
-                                  style={{
-                                    fontFamily: "Quicksand-Regular",
-                                    textAlign: "center",
-                                    fontSize: 20,
-                                    color: "#fff",
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                  }}
-                                >
-                                  {translate("signinwithcode")}
-                                </Text>
-                              </TouchableOpacity>
-                              {this.state.signinwithcodewrap ? (
-                                <View
-                                  style={{
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <TextInput
-                                    onChangeText={(text) =>
-                                      this.setState({ checkSignCodeTxt: text })
-                                    }
-                                    style={styles.input}
-                                    placeholderTextColor="#555"
-                                    placeholder="Please input Verification code."
-                                    keyboardType={"numeric"}
-                                  ></TextInput>
-                                  <TouchableOpacity
-                                    onPress={() => this.checksigncode()}
-                                    style={styles.button1}
-                                  >
-                                    <Text
-                                      style={{
-                                        fontFamily: "Quicksand-Regular",
-                                        textAlign: "center",
-                                        fontSize: 20,
-                                        color: "#fff",
-                                        paddingLeft: 10,
-                                        paddingRight: 10,
-                                      }}
-                                    >
-                                      {translate("submit")}
-                                    </Text>
-                                  </TouchableOpacity>
-                                </View>
-                              ) : (
-                                <></>
-                              )}
-                            </View>
-                          </View>
-                        </View>
-                      </View>
-                    ) : (
-                      <Login
-                        translate={translate}
-                        phoneNumber={this.state.phoneNumber}
-                        gotoSignUp={this.gotoSignUp}
-                        gotoStaffLogin={this.gotoStaffLogin}
-                      />
-                    )}
-                  </>
-                ) : (
-                  <></>
-                )}
-                {this.state.answer === 2 ? (
-                  <Signup
-                    translate={translate}
-                    gotoSignUpBack={this.gotoSignUpBack}
-                    finishSignUp={this.finishSignUp}
-                    phone={this.state.phoneNumber}
-                  />
-                ) : (
-                  <></>
-                )}
-                {this.state.answer === 0 ? (
+                {this.state.update == 0 && this.state.showBiometry ? (
                   <View style={{ flex: 1 }}>
                     <View style={styles.container}>
                       <View
@@ -558,154 +354,217 @@ export default class SplashScreen extends Component {
                           alignItems: "center",
                         }}
                       >
-                        {this.state.update == 1 && (
-                          <View
-                            style={{
-                              width: Dimensions.get("window").width * 0.8,
-                              height: Dimensions.get("window").height * 0.45,
-                              backgroundColor: "white",
-                              borderRadius: 5,
-                              padding: 20,
-                            }}
+                        <View
+                          style={{
+                            width: Dimensions.get("window").width * 0.8,
+                            backgroundColor: "white",
+                            borderRadius: 5,
+                            padding: 20,
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() => this.checkBiometric()}
+                            style={styles.button}
                           >
                             <Text
                               style={{
                                 fontFamily: "Quicksand-Regular",
-                                fontSize: 20,
-                                color: "#324b5f",
                                 textAlign: "center",
+                                fontSize: 20,
+                                color: "#fff",
+                                paddingLeft: 10,
+                                paddingRight: 10,
                               }}
                             >
-                              {translate("updateApp")}
+                              {translate("tryagain")}
                             </Text>
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                justifyContent: "center",
-                                paddingTop: 30,
-                              }}
-                            >
-                              <View style={{ marginRight: 15 }}>
-                                <TouchableOpacity
-                                  onPress={() => this.gotoUpdate()}
-                                  style={styles.button}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: "Quicksand-Regular",
-                                      textAlign: "center",
-                                      fontSize: 20,
-                                      color: "#fff",
-                                      paddingLeft: 10,
-                                      paddingRight: 10,
-                                    }}
-                                  >
-                                    {translate("update")}
-                                  </Text>
-                                </TouchableOpacity>
-                              </View>
-                              <View>
-                                <TouchableOpacity
-                                  onPress={() => this.setState({ update: 2 })}
-                                  style={styles.button}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: "Quicksand-Regular",
-                                      textAlign: "center",
-                                      fontSize: 20,
-                                      color: "#fff",
-                                      paddingLeft: 10,
-                                      paddingRight: 10,
-                                    }}
-                                  >
-                                    {translate("cancel")}
-                                  </Text>
-                                </TouchableOpacity>
-                              </View>
-                            </View>
-                          </View>
-                        )}
-                        {this.state.update == 2 && (
-                          <View
-                            style={{
-                              width: Dimensions.get("window").width * 0.8,
-                              height: Dimensions.get("window").height * 0.45,
-                              backgroundColor: "white",
-                              borderRadius: 5,
-                              padding: 20,
-                            }}
+                          </TouchableOpacity>
+                        </View>
+                        <View
+                          style={{
+                            width: Dimensions.get("window").width * 0.8,
+                            backgroundColor: "white",
+                            borderRadius: 5,
+                            padding: 20,
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() => this.signinwithcode()}
+                            style={styles.button}
                           >
                             <Text
                               style={{
                                 fontFamily: "Quicksand-Regular",
-                                fontSize: 20,
-                                color: "#324b5f",
                                 textAlign: "center",
+                                fontSize: 20,
+                                color: "#fff",
+                                paddingLeft: 10,
+                                paddingRight: 10,
                               }}
                             >
-                              {translate("areYouAlready")}
+                              {translate("signinwithcode")}
                             </Text>
+                          </TouchableOpacity>
+                          {this.state.signinwithcodewrap ? (
                             <View
                               style={{
-                                flexDirection: "row",
                                 justifyContent: "center",
-                                paddingTop: 30,
+                                alignItems: "center",
                               }}
                             >
-                              <View style={{ marginRight: 15 }}>
-                                <TouchableOpacity
-                                  onPress={() => this.setState({ answer: 1 })}
-                                  style={styles.button}
+                              <TextInput
+                                onChangeText={(text) =>
+                                  this.setState({ checkSignCodeTxt: text })
+                                }
+                                style={styles.input}
+                                placeholderTextColor="#555"
+                                placeholder="Please input Verification code."
+                                keyboardType={"numeric"}
+                              ></TextInput>
+                              <TouchableOpacity
+                                onPress={() => this.checksigncode()}
+                                style={styles.button1}
+                              >
+                                <Text
+                                  style={{
+                                    fontFamily: "Quicksand-Regular",
+                                    textAlign: "center",
+                                    fontSize: 20,
+                                    color: "#fff",
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                  }}
                                 >
-                                  <Text
-                                    style={{
-                                      fontFamily: "Quicksand-Regular",
-                                      textAlign: "center",
-                                      fontSize: 20,
-                                      color: "#fff",
-                                      paddingLeft: 10,
-                                      paddingRight: 10,
-                                    }}
-                                  >
-                                    {translate("yes")}
-                                  </Text>
-                                </TouchableOpacity>
-                              </View>
-                              <View>
-                                <TouchableOpacity
-                                  onPress={() => this.setState({ answer: 2 })}
-                                  style={styles.button}
-                                >
-                                  <Text
-                                    style={{
-                                      fontFamily: "Quicksand-Regular",
-                                      textAlign: "center",
-                                      fontSize: 20,
-                                      color: "#fff",
-                                      paddingLeft: 10,
-                                      paddingRight: 10,
-                                    }}
-                                  >
-                                    {translate("no")}
-                                  </Text>
-                                </TouchableOpacity>
-                              </View>
+                                  {translate("submit")}
+                                </Text>
+                              </TouchableOpacity>
                             </View>
-                          </View>
-                        )}
-                        {this.state.update == 0 && this.state.showBiometry && (
-                          <View
-                            style={{
-                              width: Dimensions.get("window").width * 0.8,
-                              height: 150,
-                              backgroundColor: "white",
-                              borderRadius: 5,
-                              padding: 20,
-                            }}
-                          >
+                          ) : (
+                            <></>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                ) : (
+                  <Login
+                    translate={translate}
+                    phoneNumber={this.state.phoneNumber}
+                    gotoSignUp={this.gotoSignUp}
+                    gotoStaffLogin={this.gotoStaffLogin}
+                  />
+                )}
+              </>
+            ) : (
+              <></>
+            )}
+            {this.state.answer === 2 ? (
+              <Signup
+                translate={translate}
+                gotoSignUpBack={this.gotoSignUpBack}
+                finishSignUp={this.finishSignUp}
+                phone={this.state.phoneNumber}
+              />
+            ) : (
+              <></>
+            )}
+            {this.state.answer === 0 ? (
+              <View style={{ flex: 1 }}>
+                <View style={styles.container}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ paddingTop: 25, width: "70%" }}>
+                      <Text
+                        style={{
+                          fontFamily: "Quicksand-Bold",
+                          fontSize: 25,
+                          color: "#afbec5",
+                        }}
+                      >
+                        {translate("welcome")}
+                      </Text>
+                    </View>
+                    <TouchableOpacity
+                      onPress={() => this.gotoSite()}
+                      style={{ paddingTop: 20, textAlign: "right" }}
+                    >
+                      <Image
+                        source={global.logo}
+                        style={{ width: 50, height: 50 }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View
+                    style={{
+                      paddingBottom: 55,
+                      paddingTop: 25,
+                      width: "90%",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontFamily: "Quicksand-Regular",
+                        fontSize: 15,
+                        color: "#333",
+                        width: "100%",
+                        textAlign: "right",
+                      }}
+                    >
+                      {translate("panswer")}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "Quicksand-Regular",
+                        fontSize: 15,
+                        color: "#333",
+                        width: "100%",
+                        textAlign: "right",
+                      }}
+                    >
+                      {translate("theQuestionBelow")}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {this.state.update == 1 && (
+                      <View
+                        style={{
+                          width: Dimensions.get("window").width * 0.8,
+                          height: Dimensions.get("window").height * 0.45,
+                          backgroundColor: "white",
+                          borderRadius: 5,
+                          padding: 20,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 20,
+                            color: "#324b5f",
+                            textAlign: "center",
+                          }}
+                        >
+                          {translate("updateApp")}
+                        </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            paddingTop: 30,
+                          }}
+                        >
+                          <View style={{ marginRight: 15 }}>
                             <TouchableOpacity
-                              onPress={() => this.checkBiometric()}
+                              onPress={() => this.gotoUpdate()}
                               style={styles.button}
                             >
                               <Text
@@ -718,18 +577,134 @@ export default class SplashScreen extends Component {
                                   paddingRight: 10,
                                 }}
                               >
-                                {translate("tryagain")}
+                                {translate("update")}
                               </Text>
                             </TouchableOpacity>
                           </View>
-                        )}
+                          <View>
+                            <TouchableOpacity
+                              onPress={() => this.setState({ update: 2 })}
+                              style={styles.button}
+                            >
+                              <Text
+                                style={{
+                                  fontFamily: "Quicksand-Regular",
+                                  textAlign: "center",
+                                  fontSize: 20,
+                                  color: "#fff",
+                                  paddingLeft: 10,
+                                  paddingRight: 10,
+                                }}
+                              >
+                                {translate("cancel")}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
                       </View>
-                    </View>
+                    )}
+                    {this.state.update == 2 && (
+                      <View
+                        style={{
+                          width: Dimensions.get("window").width * 0.8,
+                          height: Dimensions.get("window").height * 0.45,
+                          backgroundColor: "white",
+                          borderRadius: 5,
+                          padding: 20,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontFamily: "Quicksand-Regular",
+                            fontSize: 20,
+                            color: "#324b5f",
+                            textAlign: "center",
+                          }}
+                        >
+                          {translate("areYouAlready")}
+                        </Text>
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            paddingTop: 30,
+                          }}
+                        >
+                          <View style={{ marginRight: 15 }}>
+                            <TouchableOpacity
+                              onPress={() => this.setState({ answer: 1 })}
+                              style={styles.button}
+                            >
+                              <Text
+                                style={{
+                                  fontFamily: "Quicksand-Regular",
+                                  textAlign: "center",
+                                  fontSize: 20,
+                                  color: "#fff",
+                                  paddingLeft: 10,
+                                  paddingRight: 10,
+                                }}
+                              >
+                                {translate("yes")}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                          <View>
+                            <TouchableOpacity
+                              onPress={() => this.setState({ answer: 2 })}
+                              style={styles.button}
+                            >
+                              <Text
+                                style={{
+                                  fontFamily: "Quicksand-Regular",
+                                  textAlign: "center",
+                                  fontSize: 20,
+                                  color: "#fff",
+                                  paddingLeft: 10,
+                                  paddingRight: 10,
+                                }}
+                              >
+                                {translate("no")}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+                    )}
+                    {this.state.update == 0 && this.state.showBiometry && (
+                      <View
+                        style={{
+                          width: Dimensions.get("window").width * 0.8,
+                          height: 150,
+                          backgroundColor: "white",
+                          borderRadius: 5,
+                          padding: 20,
+                        }}
+                      >
+                        <TouchableOpacity
+                          onPress={() => this.checkBiometric()}
+                          style={styles.button}
+                        >
+                          <Text
+                            style={{
+                              fontFamily: "Quicksand-Regular",
+                              textAlign: "center",
+                              fontSize: 20,
+                              color: "#fff",
+                              paddingLeft: 10,
+                              paddingRight: 10,
+                            }}
+                          >
+                            {translate("tryagain")}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
                   </View>
-                ) : (
-                  <></>
-                )}
-              </>
+                </View>
+              </View>
+            ) : (
+              <></>
             )}
           </>
         )}

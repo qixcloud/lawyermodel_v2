@@ -12,14 +12,17 @@ import {
   KeyboardAvoidingView,
   Alert,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import SignUpSteps from "./SignUpSteps";
+import Dashboard from "./Dashboard";
 import axios from "axios";
 import AdvancedSettings from "./AdvancedSettings";
 import { Input, Icon } from "react-native-elements";
 import { Picker } from "@react-native-picker/picker";
 import MaskInput, { Masks } from "react-native-mask-input";
 import {
+  appId,
   convertImageToBase64,
   convertPdfToBase64,
   createPDF,
@@ -29,6 +32,7 @@ import {
 import { launchCamera } from "react-native-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RNBlobUtil from "react-native-blob-util";
+import RNFS from "react-native-fs";
 
 export default class MySettings extends Component {
   constructor(props) {
@@ -91,34 +95,70 @@ export default class MySettings extends Component {
       inputZipCode: "",
       termsOfService: "",
       dismissal: "Injured at Work",
+      dismissal: "",
+      incident_date: "",
+      inputName: "",
+      inputPhone: "",
+      inputEmail: "",
+      birthday: "",
+      inputEmployerName: "",
+      inputDateHired: "",
+      inputHoursWages: "",
+      inputPayStUBPicture: "",
+      inputGovIdPicture: "",
+      inputAddress: "",
+      inputAddress2: "",
+      inputCity: "",
+      inputZipCode: "",
+      settingSaving: false,
+      intake_complete: global.intake_complete,
     };
   }
   componentDidMount = () => {
-    const params = new FormData();
-    params.append("method", "get_settings");
-    params.append("contact_id", global.contactId);
-    axios({
-      method: "post",
+    this.test();
+    // const params = new FormData();
+    // params.append("method", "get_settings");
+    // params.append("contact_id", global.contactId);
+    // axios({
+    //   method: "post",
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    //   url: global.baseUrl + "wp-admin/admin-ajax.php?action=contact_api",
+    //   data: params,
+    // }).then((res) => {
+    //   console.log("data",res.data);
+    //   if (res.data.status == "success") {
+    //     this.setState({ email: res.data.base.Email_1_Value });
+    //     this.setState({ yelp: res.data.yelp });
+    //     this.setState({ incident: res.data.incident });
+    //     this.setState({ phone: res.data.base.Phone_1_Value });
+    //     this.setState({ birthday: res.data.base.Birthday });
+    //     this.setState({ street: res.data.base.Address_1_Street });
+    //     this.setState({ city: res.data.base.Address_1_City });
+    //     this.setState({ zipCode: res.data.base.Address_1_Postal_Code });
+    //     this.setState({ state: res.data.base.Address_1_Region });
+    //     this.setState({ apt: res.data.base.Address_1_Type });
+    //     global.settingsData = res.data;
+    //     console.log(this.state.phone);
+    //   }
+    // });
+  };
+  test = async () => {
+    const jwt = await AsyncStorage.getItem("jwtToken");
+
+    var myHeaders = new Headers();
+
+    await axios({
+      method: "get",
       headers: {
-        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${jwt}`,
       },
-      url: global.baseUrl + "wp-admin/admin-ajax.php?action=contact_api",
-      data: params,
-    }).then((res) => {
-      console.log(res.data);
-      if (res.data.status == "success") {
-        this.setState({ email: res.data.base.Email_1_Value });
-        this.setState({ yelp: res.data.yelp });
-        this.setState({ incident: res.data.incident });
-        this.setState({ phone: res.data.base.Phone_1_Value });
-        this.setState({ birthday: res.data.base.Birthday });
-        this.setState({ street: res.data.base.Address_1_Street });
-        this.setState({ city: res.data.base.Address_1_City });
-        this.setState({ zipCode: res.data.base.Address_1_Postal_Code });
-        this.setState({ state: res.data.base.Address_1_Region });
-        this.setState({ apt: res.data.base.Address_1_Type });
-        global.settingsData = res.data;
-        console.log(this.state.phone);
+      url: "https://api.qix.cloud/conversation",
+    }).then(async (res) => {
+      if (res?.data?.id) {
+        const conversationId = res.data.id;
+        console.log(res.data.id, res.data.fullName);
       }
     });
   };
@@ -176,6 +216,35 @@ export default class MySettings extends Component {
           });
       }
     });
+  };
+  uploadDocumentToWebserver = async (file) => {
+    const formData = new FormData();
+    const fileUri = file.filePath.startsWith("file://")
+      ? file.filePath
+      : `file://${file.filePath}`;
+
+    // Read the file from the local path and add it to FormData
+    formData.append("name", "");
+    formData.append("file", {
+      uri: fileUri, // The local file path
+      name: "test3.pdf", // The file name
+      type: "application/pdf", // MIME type of the file
+    });
+    try {
+      const response = await axios.post(
+        "https://qix.cloud/ajax/pdfs/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      return response.data.status == "success" ? response.data.path : "";
+    } catch (error) {
+      return "";
+    }
   };
   uploadDocumentToMerusCase = async (file) => {
     RNBlobUtil.fetch(
@@ -275,84 +344,106 @@ export default class MySettings extends Component {
     this.setState({ logout: 1 });
     this.setState({ back: 1 });
   };
+  isSecondStepFull = () => {
+    return (
+      this.state.intake_complete ||
+      (this.state.inputName &&
+        this.state.inputPhone &&
+        this.state.inputEmail &&
+        this.state.incident_date &&
+        this.state.birthday)
+    );
+  };
 
+  isThirdStepFull = () => {
+    return (
+      this.state.intake_complete ||
+      (this.state.inputEmployerName &&
+        this.state.inputDateHired &&
+        this.state.inputHoursWages &&
+        this.state.inputPayStUBPicture)
+    );
+  };
+
+  isForthStepFull = () => {
+    return this.state.intake_complete || this.state.inputGovIdPicture;
+  };
+  isFiveStep = () => {
+    return (
+      this.state.intake_complete ||
+      (this.state.inputAddress &&
+        this.state.inputCity &&
+        this.state.inputZipCode)
+    );
+  };
   handleSubmit = async () => {
-    await createPDF(
-      this.state.dismissal,
-      this.state.incident_date,
-      this.state.inputName,
-      this.state.inputPhone,
-      this.state.inputEmail,
-      this.state.birthday,
-      this.state.inputEmployerName,
-      this.state.inputDateHired,
-      this.state.inputHoursWages,
-      this.state.inputPayStUBPicture,
-      this.state.inputGovIdPicture,
-      this.state.inputAddress,
-      this.state.inputAddress2,
-      this.state.inputCity,
-      this.state.inputZipCode
-    ).then(async (res) => {
-      // this.sendFileToMerusCase(res.filePath);
-      this.uploadDocumentToMerusCase(res);
-      const jwt = await AsyncStorage.getItem("jwtToken");
+    // if (
+    //   this.isSecondStepFull() &&
+    //   this.isThirdStepFull() &&
+    //   this.isForthStepFull() &&
+    //   this.isFiveStep()
+    // )
 
-      await axios({
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-        url: "https://api.qix.cloud/conversation",
-      }).then(async (resConversation) => {
-        const conversationData = resConversation.data;
-        conversationData.intake_complete = true;
-        global.intake_complete = true;
-
+    if (!this.state.settingSaving) {
+      this.setState({ settingSaving: true });
+      await createPDF(
+        this.state.dismissal,
+        this.state.incident_date,
+        this.state.inputName,
+        this.state.inputPhone,
+        this.state.inputEmail,
+        this.state.birthday,
+        this.state.inputEmployerName,
+        this.state.inputDateHired,
+        this.state.inputHoursWages,
+        this.state.inputPayStUBPicture,
+        this.state.inputGovIdPicture,
+        this.state.inputAddress,
+        this.state.inputAddress2,
+        this.state.inputCity,
+        this.state.inputZipCode
+      ).then(async (res) => {
+        // this.sendFileToMerusCase(res.filePath);
+        this.uploadDocumentToMerusCase(res);
+        const pdf = await this.uploadDocumentToWebserver(res);
+        const jwt = await AsyncStorage.getItem("jwtToken");
         await axios({
-          method: "put",
+          method: "get",
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
           url: "https://api.qix.cloud/conversation",
-          data: conversationData,
+        }).then(async (resConversation) => {
+          const conversationData = resConversation.data;
+          conversationData.intake_complete = true;
+          if (pdf != "") {
+            conversationData.cases.push({
+              creator: appId,
+              details: "Account Complete " + pdf,
+              name: "Account Complete",
+              timestamp: Date.now(),
+              recipient: "",
+            });
+          }
+          global.intake_complete = true;
+          this.setState({ intake_complete: true });
+          await axios({
+            method: "put",
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+            url: "https://api.qix.cloud/conversation",
+            data: conversationData,
+          });
+          Alert.alert("Saved");
+          this.setState({ settingSaving: false });
         });
       });
-    });
+    }
   };
 
   render() {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
-
-    const isSecondStepFull = () => {
-      return (
-        this.state.inputName &&
-        this.state.inputPhone &&
-        this.state.inputEmail &&
-        this.state.incident_date &&
-        this.state.birthday
-      );
-    };
-
-    const isThirdStepFull = () => {
-      return (
-        this.state.inputEmployerName &&
-        this.state.inputDateHired &&
-        this.state.inputHoursWages &&
-        this.state.inputPayStUBPicture
-      );
-    };
-
-    const isForthStepFull = () => {
-      return this.state.inputGovIdPicture;
-    };
-    const isFiveStep = () => {
-      return (
-        this.state.inputAddress &&
-        this.state.inputCity &&
-        this.state.inputZipCode
-      );
-    };
 
     const isFormFull = () => {
       return (
@@ -364,25 +455,25 @@ export default class MySettings extends Component {
     };
 
     const checkSecondStep = () => {
-      if (isSecondStepFull()) {
+      if (this.isSecondStepFull()) {
         this.setState({ showContact: false });
       }
     };
 
     const checkThirdStep = () => {
-      if (isThirdStepFull()) {
+      if (this.isThirdStepFull()) {
         this.setState({ showEmployer: false });
       }
     };
 
     const checkForthStep = () => {
-      if (isForthStepFull()) {
+      if (this.isForthStepFull()) {
         this.setState({ showLicence: false });
       }
     };
 
     const checkFiveStep = () => {
-      if (isFiveStep()) {
+      if (this.isFiveStep()) {
         this.setState({ showPrimaryResidence: false });
       }
     };
@@ -502,7 +593,7 @@ export default class MySettings extends Component {
                   >
                     <ScrollView
                       showsVerticalScrollIndicator={false}
-                      style={{ flex: 1 }}
+                      style={{ flex: 0 }}
                     >
                       <View style={{ flexDirection: "row", marginTop: 30 }}>
                         <View
@@ -540,19 +631,6 @@ export default class MySettings extends Component {
                               padding: 5,
                             }}
                           >
-                            {/* <RNPickerSelect
-											placeholder={{
-												label: this.props.translate("selectInjuryType") + '...',
-												value: '',
-											}}
-											onValueChange={(value) => this.setState({ dismissal: value })}
-											items={[
-												{ label: this.props.translate("injuredAtWork"), value: 'Injured at Work' },
-												{ label: this.props.translate("injuredOutsideWork"), value: 'Injured outside Work' },
-												{ label: this.props.translate("vehicleAccident"), value: 'Vehicle Accident' },
-												{ label: this.props.translate("unfairDismissal"), value: 'Unfair Dismissal' },
-											]} style={pickerStyle}
-										/> */}
                             <Picker
                               style={{
                                 backgroundColor: "#333b48",
@@ -601,7 +679,7 @@ export default class MySettings extends Component {
                             height: 25,
                             width: 25,
                             borderRadius: 25,
-                            backgroundColor: isSecondStepFull()
+                            backgroundColor: this.isSecondStepFull()
                               ? "#5fab78"
                               : "#ea5d59",
                             marginRight: 10,
@@ -631,7 +709,10 @@ export default class MySettings extends Component {
                           <Icon
                             style={{ marginLeft: 5 }}
                             name={
-                              this.state.showContact ? "arrow-up" : "arrow-down"
+                              this.state.showContact &&
+                              !this.state.intake_complete
+                                ? "arrow-up"
+                                : "arrow-down"
                             }
                             type="font-awesome-5"
                             color={"#afbec5"}
@@ -640,7 +721,7 @@ export default class MySettings extends Component {
                         </TouchableOpacity>
                       </View>
 
-                      {this.state.showContact ? (
+                      {this.state.showContact && !this.state.intake_complete ? (
                         <View
                           style={{
                             width: Dimensions.get("window").width * 0.9,
@@ -711,7 +792,11 @@ export default class MySettings extends Component {
                       <View
                         style={{
                           flexDirection: "row",
-                          marginTop: this.state.showContact ? 0 : 50,
+                          marginTop:
+                            this.state.showContact &&
+                            !this.state.intake_complete
+                              ? 0
+                              : 50,
                         }}
                       >
                         <View
@@ -719,7 +804,7 @@ export default class MySettings extends Component {
                             height: 25,
                             width: 25,
                             borderRadius: 25,
-                            backgroundColor: isThirdStepFull()
+                            backgroundColor: this.isThirdStepFull()
                               ? "#5fab78"
                               : "#ea5d59",
                             marginRight: 10,
@@ -749,7 +834,8 @@ export default class MySettings extends Component {
                           <Icon
                             style={{ marginLeft: 5 }}
                             name={
-                              this.state.showEmployer
+                              this.state.showEmployer &&
+                              !this.state.intake_complete
                                 ? "arrow-up"
                                 : "arrow-down"
                             }
@@ -760,7 +846,8 @@ export default class MySettings extends Component {
                         </TouchableOpacity>
                       </View>
 
-                      {this.state.showEmployer ? (
+                      {this.state.showEmployer &&
+                      !this.state.intake_complete ? (
                         <View
                           style={{
                             width: Dimensions.get("window").width * 0.9,
@@ -836,7 +923,11 @@ export default class MySettings extends Component {
                       <View
                         style={{
                           flexDirection: "row",
-                          marginTop: this.state.showEmployer ? 0 : 50,
+                          marginTop:
+                            this.state.showEmployer &&
+                            !this.state.intake_complete
+                              ? 0
+                              : 50,
                         }}
                       >
                         <View
@@ -844,7 +935,7 @@ export default class MySettings extends Component {
                             height: 25,
                             width: 25,
                             borderRadius: 25,
-                            backgroundColor: isForthStepFull()
+                            backgroundColor: this.isForthStepFull()
                               ? "#5fab78"
                               : "#ea5d59",
                             marginRight: 10,
@@ -874,7 +965,10 @@ export default class MySettings extends Component {
                           <Icon
                             style={{ marginLeft: 5 }}
                             name={
-                              this.state.showLicence ? "arrow-up" : "arrow-down"
+                              this.state.showLicence &&
+                              !this.state.intake_complete
+                                ? "arrow-up"
+                                : "arrow-down"
                             }
                             type="font-awesome-5"
                             color={"#afbec5"}
@@ -883,7 +977,7 @@ export default class MySettings extends Component {
                         </TouchableOpacity>
                       </View>
 
-                      {this.state.showLicence ? (
+                      {this.state.showLicence && !this.state.intake_complete ? (
                         <View
                           style={{
                             width: Dimensions.get("window").width * 0.9,
@@ -924,7 +1018,11 @@ export default class MySettings extends Component {
                       <View
                         style={{
                           flexDirection: "row",
-                          marginTop: this.state.showLicence ? 0 : 50,
+                          marginTop:
+                            this.state.showLicence &&
+                            !this.state.intake_complete
+                              ? 0
+                              : 50,
                         }}
                       >
                         <View
@@ -932,7 +1030,7 @@ export default class MySettings extends Component {
                             height: 25,
                             width: 25,
                             borderRadius: 25,
-                            backgroundColor: isFiveStep()
+                            backgroundColor: this.isFiveStep()
                               ? "#5fab78"
                               : "#ea5d59",
                             marginRight: 10,
@@ -963,7 +1061,8 @@ export default class MySettings extends Component {
                           <Icon
                             style={{ marginLeft: 5 }}
                             name={
-                              this.state.showPrimaryResidence
+                              this.state.showPrimaryResidence &&
+                              !this.state.intake_complete
                                 ? "arrow-up"
                                 : "arrow-down"
                             }
@@ -974,7 +1073,8 @@ export default class MySettings extends Component {
                         </TouchableOpacity>
                       </View>
 
-                      {this.state.showPrimaryResidence ? (
+                      {this.state.showPrimaryResidence &&
+                      !this.state.intake_complete ? (
                         <View
                           style={{
                             width: Dimensions.get("window").width * 0.9,
@@ -1036,21 +1136,26 @@ export default class MySettings extends Component {
                     </ScrollView>
                   </View>
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <TouchableOpacity
-                    onPress={() => this.handleSubmit()}
-                    style={styles.button}
+                {!this.state.intake_complete && (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
                   >
-                    <Text style={{ fontSize: 15 }}>SAVE</Text>
-                  </TouchableOpacity>
-                </View>
-
+                    <TouchableOpacity
+                      onPress={() => this.handleSubmit()}
+                      style={styles.button}
+                    >
+                      {this.state.settingSaving ? (
+                        <ActivityIndicator color={"green"} />
+                      ) : (
+                        <Text style={{ fontSize: 15 }}>SAVE</Text>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                )}
                 <View
                   style={{
                     flexDirection: "row",

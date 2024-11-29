@@ -29,6 +29,7 @@ import { launchCamera } from "react-native-image-picker";
 import { requestCameraPermission } from "./Helper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { appId, getHeaders, getDashboardItems } from "./Helper";
+import ConfirmInput from "./components/ConfirmInput";
 // import
 export default class Signup extends Component {
   constructor(props) {
@@ -403,6 +404,9 @@ export default class Signup extends Component {
       // }
     };
 
+    handleCodeFilled = (code) => {
+      this.setState({ checkVerifyTxt: code });
+    };
     return (
       <>
         {this.state.back === 1 ? <SplashScreen /> : <></>}
@@ -460,84 +464,98 @@ export default class Signup extends Component {
                     <View
                       style={{
                         flex: 1,
-                        justifyContent: "center",
+                        justifyContent: "flex-start",
                         alignItems: "center",
+                        padding: 20,
+                        marginTop: 80,
                       }}
                     >
-                      <KeyboardAvoidingView
+                      <View
                         style={{
-                          backgroundColor: "#e4e5e7",
-                          padding: 15,
-                          width: 300,
-                          borderRadius: 10,
-                          marginBottom: 100,
+                          flex: 0,
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          width: "100%",
+                          paddingHorizontal: 10,
                         }}
                       >
                         <ScalableImage
-                          source={require("./images/verify.png")}
-                          width={200}
-                          style={{ marginLeft: 50 }}
+                          source={require("./images/code_bubble.png")}
+                          width={Dimensions.get("window").width * 0.4}
+                          style={{ marginRight: "5%" }}
                         />
                         <Text
                           allowFontScaling={false}
                           style={{
-                            textAlign: "center",
                             fontFamily: "Quicksand-Regular",
-                            fontSize: 25,
+                            fontSize: 28,
                             fontWeight: "bold",
-                            marginVertical: 10,
+                            maxWidth: "50%",
+                            color: "#fff",
                           }}
                         >
-                          Verify
+                          {this.props.translate("CheckYourMessages")}
                         </Text>
-                        <TextInput
-                          onChangeText={(text) =>
-                            this.setState({ checkVerifyTxt: text })
-                          }
-                          style={styles.input}
-                          placeholder="Please input Verification code."
-                          placeholderTextColor="#555"
-                          keyboardType={"numeric"}
-                        ></TextInput>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
+                      </View>
+
+                      <Text
+                        allowFontScaling={false}
+                        style={{
+                          fontFamily: "Quicksand-Regular",
+                          fontWeight: "bold",
+                          color: "#fff",
+                          marginVertical: 30,
+                        }}
+                      >
+                        {this.props.translate("CheckYourMessageContent")}
+                      </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginBottom: 30,
+                        }}
+                      >
+                        <ConfirmInput onCodeFilled={this.handleCodeFilled} />
+                      </View>
+                      <View
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <TouchableOpacity
+                          onPress={() => this.checkVerify()}
+                          style={styles.codeSubmitButton}
                         >
-                          <TouchableOpacity
-                            onPress={() => this.hideDialog()}
-                            style={styles.button}
+                          <Text
+                            style={{
+                              fontFamily: "Quicksand-Regular",
+                              textAlign: "center",
+                              fontSize: 20,
+                              color: "#fff",
+                            }}
                           >
-                            <Text
-                              style={{
-                                fontFamily: "Quicksand-Regular",
-                                textAlign: "center",
-                                fontSize: 20,
-                                color: "#fff",
-                              }}
-                            >
-                              {this.props.translate("cancel")}
-                            </Text>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            onPress={() => this.checkVerify()}
-                            style={styles.button}
+                            {this.props.translate("submit")}
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => this.hideDialog()}
+                          style={styles.codeCancelButton}
+                        >
+                          <Text
+                            style={{
+                              fontFamily: "Quicksand-Regular",
+                              textAlign: "center",
+                              fontSize: 20,
+                              color: "#fff",
+                            }}
                           >
-                            <Text
-                              style={{
-                                fontFamily: "Quicksand-Regular",
-                                textAlign: "center",
-                                fontSize: 20,
-                                color: "#fff",
-                              }}
-                            >
-                              {this.props.translate("submit")}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      </KeyboardAvoidingView>
+                            {this.props.translate("cancel")}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   ) : (
                     <>
@@ -795,6 +813,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingLeft: 10,
     marginBottom: 10,
+  },
+  codeSubmitButton: {
+    fontFamily: "Quicksand-Regular",
+    backgroundColor: "#599cdd",
+    padding: 10,
+    borderRadius: 50,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    width: Dimensions.get("window").width - 50,
+  },
+  codeCancelButton: {
+    fontFamily: "Quicksand-Regular",
+    padding: 10,
+    borderRadius: 50,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#bbb",
+    width: Dimensions.get("window").width - 50,
+    color: "#fff",
   },
   iconContainer: {
     flexDirection: "row",

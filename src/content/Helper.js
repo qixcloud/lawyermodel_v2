@@ -112,7 +112,7 @@ export const convertImageToBase64 = async (imageUri) => {
     const response = await fetch(imageUri);
     const blob = await response.blob();
     const base64 = await blobToBase64(blob);
-    console.log("debug base64", base64);
+    //console.log("debug base64", base64);
     return base64;
   } catch (error) {
     console.error("Failed to convert image to base64:", error);
@@ -146,7 +146,7 @@ const blobToBase64 = (blob) => {
 };
 export const getDashboardItems = async () => {
   const response = await axios.post(
-    "https://qix.cloud/ajax/app.php",
+    "https://qix.cloud/ajax/app_new.php",
     {
       appId: appId,
     },
@@ -222,8 +222,17 @@ export async function createPDF(
     inputEmail
   );
 
-  const employmentPayStub64 = await convertImageToBase64(inputPayStUBPicture);
-  const govIdImage64 = await convertImageToBase64(inputGovIdPicture);
+  const getImageBase64Html = async (imagePath) => {
+    if (!imagePath) return { base64: "", html: "" };
+
+    const base64 = await convertImageToBase64(imagePath);
+    const html = `<img src="data:image/png;base64,${base64}" width="350"/>`;
+
+    return { base64, html };
+  };
+
+  const employmentPayStub = await getImageBase64Html(inputPayStUBPicture);
+  const govIdImage = await getImageBase64Html(inputGovIdPicture);
 
   let options = {
     html: `
@@ -237,9 +246,9 @@ export async function createPDF(
       <p>Date Hired: ${inputDateHired}</p>
       <p>Hours Wages: ${inputHoursWages}</p>
       <p>Pay Stub:</p>
-      <img src="${`data:image/png;base64,${employmentPayStub64}`}" width="350"/>
+      ${employmentPayStub.html}
       <p>Government ID:</p>
-      <img src="${`data:image/png;base64,${govIdImage64}`}" width="350"/>
+      ${govIdImage.html}
       <p>Address: ${inputAddress}</p>
       <p>Address2: ${inputAddress2}</p>
       <p>City: ${inputCity}</p>

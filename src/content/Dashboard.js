@@ -37,7 +37,6 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import CustomBackground from "./components/CustomBackground";
 //import BlurOverlay,{closeOverlay,openOverlay} from 'react-native-blur-overlay';
 import { BlurView } from "@react-native-community/blur";
-import SliderDashboard from "./SliderDashboard";
 import Status from "./screens/Status";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageOrSvg from "./dashboardBlocks/imageOrSvg";
@@ -254,8 +253,7 @@ export default class Dashboard extends Component {
   };
   getSliderItems = async () => {
     const dashboardData = await getDashboardItems();
-
-    this.setState({ sliderItems: dashboardData.sliders.data });
+    this.setState({ sliderItems: dashboardData.sliders.data[global.lang] });
 
     this.setState({ DashboardItems: dashboardData });
     this.setState({ colorTop: dashboardData.colors.top });
@@ -372,7 +370,7 @@ export default class Dashboard extends Component {
       url: global.baseUrl + "wp-admin/admin-ajax.php?action=contact_api",
       data: params1,
     }).then((res) => {
-      console.log("badge", res.data);
+      console.log("badge1", res.data);
       this.setState({ badgeInboxCount: res.data });
     });
   };
@@ -1032,7 +1030,11 @@ export default class Dashboard extends Component {
                                   <Status
                                     goBack={this.gotoHome}
                                     translate={this.props.translate}
-                                    status={this.state.DashboardItems.status}
+                                    status={
+                                      this.state.DashboardItems.status[
+                                        global.lang
+                                      ]
+                                    }
                                   />
                                 ) : (
                                   <></>
@@ -1252,7 +1254,7 @@ export default class Dashboard extends Component {
                       <View key={index}>
                         {section.content == "slider" && (
                           <BlockSlider
-                            sliderItems={this.state.DashboardItems.sliders.data}
+                            sliderItems={this.state.sliderItems}
                             duration={
                               this.state.DashboardItems.sliders.duration
                             }
@@ -1261,7 +1263,7 @@ export default class Dashboard extends Component {
                         )}
                         {section.content == "status" && (
                           <BlockStatus
-                            status={section}
+                            status={section[global.lang]}
                             onStatusPress={() => {
                               this.setState({
                                 appoType: "status",
@@ -1273,7 +1275,9 @@ export default class Dashboard extends Component {
                           <BlockBoxs boxs={section} gotoPage={this.gotoPage} />
                         )}
                         {section.content == "posts" && (
-                          <BlockPosts posts={this.state.DashboardItems.posts} />
+                          <BlockPosts
+                            posts={this.state.DashboardItems.posts[global.lang]}
+                          />
                         )}
                         {section.content == "button" && (
                           <BlockButton
