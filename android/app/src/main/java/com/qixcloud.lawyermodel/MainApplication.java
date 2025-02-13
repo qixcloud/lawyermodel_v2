@@ -15,7 +15,6 @@ import java.util.List;
 
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.bridge.JSIModulePackage; // <- add
-import com.swmansion.reanimated.ReanimatedJSIModulePackage; // <- add
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -42,10 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
           return "index";
         }
 
-        @Override
-        protected JSIModulePackage getJSIModulePackage() {
-            return new ReanimatedJSIModulePackage(); // <- add
-        }
+
       };
 
   private final ReactNativeHost mNewArchitectureNativeHost =
