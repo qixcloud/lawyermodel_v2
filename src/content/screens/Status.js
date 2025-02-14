@@ -11,40 +11,56 @@ import {
 
 const { width } = Dimensions.get("window");
 
-const Status = ({ goBack, translate, status, currentPhase }) => {
-  // Adaptamos los datos para asegurar el formato correcto
-  const formattedStatus = status?.map(item => ({
-    title: item.phase || "",  // Usamos phase como título
-    description: item.description || "",
-    order: item.order || 0,
-    type: item.type || "Workers' Compensation"
-  })) || [];
+const decodeHTMLEntities = (text) => {
+  return text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/<\/?p>/g, '\n')
+    .replace(/<\/?[^>]+(>|$)/g, '');
+};
 
-  // Ordenamos por order de mayor a menor
-  const sortedStatus = formattedStatus.sort((a, b) => b.order - a.order);
+const Status = ({ goBack, translate, status, currentPhase }) => {
+  const formattedStatus = status?.map(item => {
+    const languageData = item.languages?.[global.lang] || item.languages?.['en'] || {};
+    return {
+      title: languageData.phase || item.phase || "",
+      description: languageData.description || item.description || "",
+      order: item.order || 0,
+      type: item.type || "Workers' Compensation"
+    };
+  }) || [];
+
+  const sortedStatus = formattedStatus.sort((a, b) => a.order - b.order);
   
-  // Encontrar el índice que corresponde al phase actual
   const initialIndex = sortedStatus.findIndex(s => s.title === currentPhase);
   const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
-  console.log('status from screen status.js', sortedStatus);
-  console.log('current phase:', currentPhase);
-  console.log('initial index:', initialIndex);
-
   const renderItem = (item) => (
-    <View
-      style={{
-        width,
-        alignItems: "flex-start",
-        paddingRight: 20,
-        paddingLeft: 20,
-      }}
+    <ScrollView 
+      style={{ width }}
+      showsVerticalScrollIndicator={false}
     >
-      <Text style={{ fontSize: 24, color: "#2d96ef", marginBottom: 20 }}>
-        {item.title || "No Title"}
-      </Text>
-      <Text style={{ fontSize: 16, color: "white" }}>{item.description || "No Description"}</Text>
-    </View>
+      <View
+        style={{
+          alignItems: "flex-start",
+          paddingRight: 20,
+          paddingLeft: 20,
+          paddingBottom: 20,
+        }}
+      >
+        <Text style={{ fontSize: 24, color: "#2d96ef", marginBottom: 20 }}>
+          {decodeHTMLEntities(item.title || "No Title")}
+        </Text>
+        <Text style={{ fontSize: 16, color: "white" }}>
+          {decodeHTMLEntities(item.description || "No Description")}
+        </Text>
+      </View>
+    </ScrollView>
   );
 
   const handleScroll = (event) => {
@@ -52,7 +68,6 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
     setCurrentIndex(index);
   };
 
-  // Si no hay status, mostramos un mensaje
   if (!sortedStatus.length) {
     return (
       <View style={{ flex: 1, backgroundColor: "#2e3643", justifyContent: "center", alignItems: "center" }}>
@@ -120,15 +135,17 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
         ))}
       </View>
 
-      <ScrollView
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        pagingEnabled
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {renderItem(sortedStatus[currentIndex])}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        >
+          {renderItem(sortedStatus[currentIndex])}
+        </ScrollView>
+      </View>
 
       <View
         style={{
