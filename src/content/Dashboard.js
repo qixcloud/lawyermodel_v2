@@ -105,6 +105,7 @@ export default class Dashboard extends Component {
       colorBody: "#eef2f5",
       colorBottom: "#a8c6f5",
       logoLoaded: false,
+      currentPhase: "",
     };
     this.sheetRef = React.createRef();
     this.getBadgeCount();
@@ -126,6 +127,7 @@ export default class Dashboard extends Component {
     }
   };
   async componentDidMount() {
+    await this.getConversation();
     this.getSliderItems();
 
     const projectIdJson = await AsyncStorage.getItem("projectId");
@@ -254,7 +256,8 @@ export default class Dashboard extends Component {
   getSliderItems = async () => {
     const dashboardData = await getDashboardItems();
     this.setState({ sliderItems: dashboardData.sliders.data[global.lang] });
-
+    console.log("dashboardData", dashboardData);
+    
     this.setState({ DashboardItems: dashboardData });
     this.setState({ colorTop: dashboardData.colors.top });
     this.setState({ colorBody: dashboardData.colors.body });
@@ -637,6 +640,32 @@ export default class Dashboard extends Component {
       </TouchableOpacity>
     );
   };
+  getConversation = async () => {
+    try {
+      const jwt = await AsyncStorage.getItem("jwtToken");
+      const response = await axios({
+        method: "get", 
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        },
+        url: "https://api.qix.cloud/conversation"
+      });
+
+      console.log("Conversation response:", response.data);
+
+      if (response?.data?.caseFileIdsMetaMap) {
+        const firstCaseFileId = Object.keys(response.data.caseFileIdsMetaMap)[0];
+        const phase = response.data.caseFileIdsMetaMap[firstCaseFileId]?.phase;
+        
+        console.log("Phase found:", phase);
+        this.setState({ currentPhase: phase || "" });
+      }
+
+    } catch (error) {
+      console.error("Error getting conversation:", error);
+    }
+  };
+
   render() {
     const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
     return (
@@ -1030,6 +1059,7 @@ export default class Dashboard extends Component {
                                   <Status
                                     goBack={this.gotoHome}
                                     translate={this.props.translate}
+                                    currentPhase={this.state.currentPhase}
                                     status={
                                       this.state.DashboardItems.status[
                                         global.lang
@@ -1263,6 +1293,7 @@ export default class Dashboard extends Component {
                         )}
                         {section.content == "status" && (
                           <BlockStatus
+                            currentPhase={this.state.currentPhase}
                             status={section[global.lang]}
                             onStatusPress={() => {
                               this.setState({

@@ -11,7 +11,7 @@ export const apiKey = "fvpk_400bd760-28f1-d5cb-ab2b-6e2838933169";
 export const apiSecret =
   "fvsk_a53d25367d03ca01d4b66b707fbc9e623a51455f090c7c47db86e9ca24ef43c9";
 export const projectId = 156794;
-export const appId = "BC0HvnD7d1OCHhqPDqtH";
+export const appId = "91d9a648e4f46b5ed9918f2276a8ccca";
 
 export async function requestNotificationPermission() {
   if (Platform.OS === "ios") {
@@ -145,6 +145,23 @@ const blobToBase64 = (blob) => {
   });
 };
 export const getDashboardItems = async () => {
+  const jwt = await AsyncStorage.getItem("jwtToken");
+  const response2 = await axios({
+    method: "get", 
+    headers: {
+      Authorization: `Bearer ${jwt}`
+    },
+    url: "https://api.qix.cloud/phaseFileVine"
+  });
+  
+  const response3 = await axios({
+    method: "get", 
+    headers: {
+      Authorization: `Bearer ${jwt}`
+    },
+    url: "https://api.qix.cloud/phaseMerusCase"
+  });
+
   const response = await axios.post(
     "https://qix.cloud/ajax/app_new.php",
     {

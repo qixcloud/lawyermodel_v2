@@ -12,8 +12,14 @@ import {
 
 const { width } = Dimensions.get("window");
 
-const Status = ({ goBack, translate, status }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const Status = ({ goBack, translate, status, currentPhase }) => {
+  // Encontrar el índice que corresponde al phase actual
+  const initialIndex = status.findIndex(s => s.title === currentPhase);
+  const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
+
+  console.log('status from screen status.js', status);
+  console.log('current phase:', currentPhase);
+  console.log('initial index:', initialIndex);
 
   const renderItem = (item) => (
     <View

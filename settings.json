@@ -1,0 +1,12 @@
+{
+  "gitlens.codeLens.enabled": true,
+  "gitlens.currentLine.enabled": true,
+  "gitlens.hovers.currentLine.over": "line",
+  "gitlens.blame.heatmap.enabled": true,
+  "gitlens.blame.highlight.enabled": true,
+  "gitlens.blame.format": "${author}, ${date}",
+  "gitlens.blame.dateFormat": "YYYY-MM-DD",
+  "gitlens.blame.compact": false,
+  "gitlens.blame.separateLines": true,
+  "gitlens.modes.blame.line.enabled": true
+} 

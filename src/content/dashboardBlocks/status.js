@@ -17,7 +17,9 @@ export default class BlockStatus extends Component {
   }
 
   render() {
-    return (
+      console.log('status from status.js',this.props.status);
+
+      return (
       <View style={{ marginVertical: 15, marginHorizontal: 25 }}>
         <View style={{ borderWidth: 0 }}>
           <TouchableOpacity
@@ -51,12 +53,12 @@ export default class BlockStatus extends Component {
                 <Text
                   style={{
                     color: "#fff",
-                    paddingHorizontal: 20,
+                    paddingLeft: 20,
                     fontSize: 16,
                     fontWeight: "bold",
                   }}
                 >
-                  {this.props.status.title}
+                  {this.props.currentPhase}
                 </Text>
                 <Text
                   style={{

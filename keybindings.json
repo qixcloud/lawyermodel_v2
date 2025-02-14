@@ -1,0 +1,5 @@
+{
+  "key": "alt+b",
+  "command": "gitlens.toggleFileBlame",
+  "when": "editorTextFocus && config.gitlens.keymap == 'alternate'"
+} 
