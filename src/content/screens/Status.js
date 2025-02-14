@@ -31,13 +31,17 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
       title: languageData.phase || item.phase || "",
       description: languageData.description || item.description || "",
       order: item.order || 0,
-      type: item.type || "Workers' Compensation"
+      type: item.type || "",
+      phase: item.phase || "",
     };
   }) || [];
 
   const sortedStatus = formattedStatus.sort((a, b) => a.order - b.order);
   
-  const initialIndex = sortedStatus.findIndex(s => s.title === currentPhase);
+  const initialIndex = sortedStatus.findIndex(s => s.phase === currentPhase);
+  console.log("debugging sortedStatus", sortedStatus);
+  console.log("debugging initialIndex", initialIndex	);
+  
   const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
   const renderItem = (item) => (

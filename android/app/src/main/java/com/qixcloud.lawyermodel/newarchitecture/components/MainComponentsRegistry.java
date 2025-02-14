@@ -1,4 +1,4 @@
-package com.qixcloud.lawyermodel.newarchitecture.components;
+package com.qixcloud.hyndmanApp.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

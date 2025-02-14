@@ -1,4 +1,4 @@
-package com.qixcloud.lawyermodel;
+package com.qixcloud.hyndmanApp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -10,7 +10,7 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected String getMainComponentName() {
-    return "qixcloud.lawyermodel";
+    return "qixcloud.hyndman";
   }
 
   @Override

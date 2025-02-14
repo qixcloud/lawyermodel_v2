@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.qixcloud.lawyermodel",
+  "applicationId": "com.qixcloud.hyndmanApp",
   "variantName": "release",
   "elements": [
     {
