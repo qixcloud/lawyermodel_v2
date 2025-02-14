@@ -28,7 +28,7 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
   const formattedStatus = status?.map(item => {
     const languageData = item.languages?.[global.lang] || item.languages?.['en'] || {};
     return {
-      title: languageData.phase || item.phase || "",
+      title: languageData.phase || item.title || "",
       description: languageData.description || item.description || "",
       order: item.order || 0,
       type: item.type || "",
@@ -37,15 +37,15 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
   }) || [];
 
   const sortedStatus = formattedStatus.sort((a, b) => a.order - b.order);
-  
+
   const initialIndex = sortedStatus.findIndex(s => s.phase === currentPhase);
   console.log("debugging sortedStatus", sortedStatus);
   console.log("debugging initialIndex", initialIndex	);
-  
+
   const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
   const renderItem = (item) => (
-    <ScrollView 
+    <ScrollView
       style={{ width }}
       showsVerticalScrollIndicator={false}
     >

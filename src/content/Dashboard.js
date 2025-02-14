@@ -649,7 +649,7 @@ export default class Dashboard extends Component {
     try {
       const jwt = await AsyncStorage.getItem("jwtToken");
       const response = await axios({
-        method: "get", 
+        method: "get",
         headers: {
           Authorization: `Bearer ${jwt}`
         },
@@ -661,7 +661,7 @@ export default class Dashboard extends Component {
       if (response?.data?.caseFileIdsMetaMap) {
         const firstCaseFileId = Object.keys(response.data.caseFileIdsMetaMap)[0];
         const phase = response.data.caseFileIdsMetaMap[firstCaseFileId]?.phase;
-        
+
         console.log("Phase found:", phase);
         this.setState({ currentPhase: phase || "" });
       }
@@ -1066,7 +1066,9 @@ export default class Dashboard extends Component {
                                     translate={this.props.translate}
                                     currentPhase={this.state.currentPhase}
                                     status={
-                                      this.state.customDashboardItems
+                                      this.state.customDashboardItems || this.state.DashboardItems.status[
+                                          global.lang
+                                          ]
                                     }
                                   />
                                 ) : (
@@ -1297,7 +1299,7 @@ export default class Dashboard extends Component {
                         {section.content == "status" && (
                           <BlockStatus
                             currentPhase={this.state.currentPhase}
-                            status={this.state.customDashboardItems}
+                            status={this.state.customDashboardItems ?? section[global.lang]}
                             onStatusPress={() => {
                               this.setState({
                                 appoType: "status",
