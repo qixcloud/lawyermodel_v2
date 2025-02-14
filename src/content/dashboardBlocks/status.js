@@ -67,7 +67,7 @@ export default class BlockStatus extends Component {
                     marginTop: 6,
                   }}
                 >
-                  {this.props.status.text}
+                  Click to learn more
                 </Text>
               </View>
               <View style={{ flex: 1 }}>

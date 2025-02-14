@@ -40,7 +40,7 @@ import { BlurView } from "@react-native-community/blur";
 import Status from "./screens/Status";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageOrSvg from "./dashboardBlocks/imageOrSvg";
-import { appId, getHeaders, getDashboardItems } from "./Helper";
+import { appId, getHeaders, getDashboardItems , getCustomDashboardItems} from "./Helper";
 import BlockSlider from "./dashboardBlocks/slider";
 import BlockStatus from "./dashboardBlocks/status";
 import BlockPosts from "./dashboardBlocks/posts";
@@ -106,6 +106,7 @@ export default class Dashboard extends Component {
       colorBottom: "#a8c6f5",
       logoLoaded: false,
       currentPhase: "",
+      status: []
     };
     this.sheetRef = React.createRef();
     this.getBadgeCount();
@@ -127,7 +128,7 @@ export default class Dashboard extends Component {
     }
   };
   async componentDidMount() {
-    await this.getConversation();
+    this.getConversation();
     this.getSliderItems();
 
     const projectIdJson = await AsyncStorage.getItem("projectId");
@@ -226,6 +227,7 @@ export default class Dashboard extends Component {
         url: "https://api.qix.cloud/conversation",
       });
 
+      console.log('important response',response)
       if (response?.data?.intake_complete) {
         this.setState({ intake_complete: res.data.intake_complete });
       }
@@ -255,9 +257,12 @@ export default class Dashboard extends Component {
   };
   getSliderItems = async () => {
     const dashboardData = await getDashboardItems();
+    const customDashboardData = await getCustomDashboardItems();
     this.setState({ sliderItems: dashboardData.sliders.data[global.lang] });
+    this.setState({ customDashboardItems: customDashboardData });
     console.log("dashboardData", dashboardData);
-    
+    console.log("customDashboardData", customDashboardData)
+    ;
     this.setState({ DashboardItems: dashboardData });
     this.setState({ colorTop: dashboardData.colors.top });
     this.setState({ colorBody: dashboardData.colors.body });
@@ -1061,9 +1066,7 @@ export default class Dashboard extends Component {
                                     translate={this.props.translate}
                                     currentPhase={this.state.currentPhase}
                                     status={
-                                      this.state.DashboardItems.status[
-                                        global.lang
-                                      ]
+                                      this.state.customDashboardItems
                                     }
                                   />
                                 ) : (
@@ -1294,7 +1297,7 @@ export default class Dashboard extends Component {
                         {section.content == "status" && (
                           <BlockStatus
                             currentPhase={this.state.currentPhase}
-                            status={section[global.lang]}
+                            status={this.state.customDashboardItems}
                             onStatusPress={() => {
                               this.setState({
                                 appoType: "status",

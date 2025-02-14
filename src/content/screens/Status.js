@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   Image,
   Dimensions,
   Platform,
@@ -13,11 +12,22 @@ import {
 const { width } = Dimensions.get("window");
 
 const Status = ({ goBack, translate, status, currentPhase }) => {
+  // Adaptamos los datos para asegurar el formato correcto
+  const formattedStatus = status?.map(item => ({
+    title: item.phase || "",  // Usamos phase como título
+    description: item.description || "",
+    order: item.order || 0,
+    type: item.type || "Workers' Compensation"
+  })) || [];
+
+  // Ordenamos por order de mayor a menor
+  const sortedStatus = formattedStatus.sort((a, b) => b.order - a.order);
+  
   // Encontrar el índice que corresponde al phase actual
-  const initialIndex = status.findIndex(s => s.title === currentPhase);
+  const initialIndex = sortedStatus.findIndex(s => s.title === currentPhase);
   const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
-  console.log('status from screen status.js', status);
+  console.log('status from screen status.js', sortedStatus);
   console.log('current phase:', currentPhase);
   console.log('initial index:', initialIndex);
 
@@ -31,9 +41,9 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
       }}
     >
       <Text style={{ fontSize: 24, color: "#2d96ef", marginBottom: 20 }}>
-        {item.title}
+        {item.title || "No Title"}
       </Text>
-      <Text style={{ fontSize: 16, color: "white" }}>{item.description}</Text>
+      <Text style={{ fontSize: 16, color: "white" }}>{item.description || "No Description"}</Text>
     </View>
   );
 
@@ -41,6 +51,15 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / width);
     setCurrentIndex(index);
   };
+
+  // Si no hay status, mostramos un mensaje
+  if (!sortedStatus.length) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#2e3643", justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: "white", fontSize: 18 }}>No status information available</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: "#2e3643" }}>
@@ -82,7 +101,7 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
           marginVertical: 35,
         }}
       >
-        {status.map((_, index) => (
+        {sortedStatus.map((_, index) => (
           <View
             key={index}
             style={{
@@ -108,7 +127,7 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
       >
-        {renderItem(status[currentIndex])}
+        {renderItem(sortedStatus[currentIndex])}
       </ScrollView>
 
       <View
@@ -140,10 +159,10 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
           <View />
         )}
 
-        {currentIndex < status.length - 1 ? (
+        {currentIndex < sortedStatus.length - 1 ? (
           <TouchableOpacity
             onPress={() => {
-              if (currentIndex < status.length - 1) {
+              if (currentIndex < sortedStatus.length - 1) {
                 setCurrentIndex(currentIndex + 1);
               }
             }}

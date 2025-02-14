@@ -145,23 +145,6 @@ const blobToBase64 = (blob) => {
   });
 };
 export const getDashboardItems = async () => {
-  const jwt = await AsyncStorage.getItem("jwtToken");
-  const response2 = await axios({
-    method: "get", 
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
-    url: "https://api.qix.cloud/phaseFileVine"
-  });
-  
-  const response3 = await axios({
-    method: "get", 
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
-    url: "https://api.qix.cloud/phaseMerusCase"
-  });
-
   const response = await axios.post(
     "https://qix.cloud/ajax/app_new.php",
     {
@@ -173,8 +156,55 @@ export const getDashboardItems = async () => {
       },
     }
   );
+
+  console.log('important response.data',response.data)
   return response.data;
 };
+
+export const getCustomDashboardItems = async () => {
+  const jwt = await AsyncStorage.getItem("jwtToken");
+
+  const conversationResponse = await axios({
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${jwt}`
+    },
+    url: "https://api.qix.cloud/conversation"
+  });
+
+  let fileVineData = null;
+  let merusCaseData = null;
+
+  if (conversationResponse.data?.advanced) {
+    if (conversationResponse.data.advanced.fileVineProjectIds?.length > 0) {
+      const fileVineResponse = await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        },
+        url: "https://api.qix.cloud/phaseFileVine"
+      });
+      fileVineData = fileVineResponse.data;
+    }
+
+    if (conversationResponse.data.advanced.caseFileIds?.length > 0) {
+      const merusCaseResponse = await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        },
+        url: "https://api.qix.cloud/phaseMerusCase"
+      });
+      merusCaseData = merusCaseResponse.data;
+    }
+  }
+
+  console.log('FileVine data:', fileVineData);
+  console.log('MerusCase data:', merusCaseData);
+
+  return merusCaseData ?? fileVineData;
+};
+
 export const getHeaders = async () => {
   const date = new Date();
   date.setMilliseconds(511);
