@@ -68,7 +68,7 @@ export default class BlockStatus extends Component {
                     marginTop: 6,
                   }}
                 >
-                  Click to learn more
+                    {this.props.translate("clicktolearnmore")}
                 </Text>
               </View>
               <View style={{ flex: 1 }}>

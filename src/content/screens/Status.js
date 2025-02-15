@@ -24,7 +24,7 @@ const decodeHTMLEntities = (text) => {
     .replace(/<\/?[^>]+(>|$)/g, '');
 };
 
-const Status = ({ goBack, translate, status, currentPhase }) => {
+const Status = ({ goBack, translate, status, currentPhase,rawPhase }) => {
   const formattedStatus = status?.map(item => {
     const languageData = item.languages?.[global.lang] || item.languages?.['en'] || {};
     return {
@@ -38,9 +38,10 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
 
   const sortedStatus = formattedStatus.sort((a, b) => a.order - b.order);
 
-  const initialIndex = sortedStatus.findIndex(s => s.phase === currentPhase);
+  const initialIndex = sortedStatus.findIndex(s => s.phase === rawPhase);
   console.log("debugging sortedStatus", sortedStatus);
-  console.log("debugging initialIndex", initialIndex	);
+  console.log("debugging initialIndex", initialIndex);
+  console.log("debugging currentPhase", currentPhase);
 
   const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
@@ -60,6 +61,15 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
         <Text style={{ fontSize: 24, color: "#2d96ef", marginBottom: 20 }}>
           {decodeHTMLEntities(item.title || "No Title")}
         </Text>
+        {initialIndex === currentIndex && (
+          <View style={{borderColor:'#2d96ef', borderWidth:1, borderRadius:5, justifyContent: "center"}}>
+            <Text style={{ fontSize: 16, color: "#2d96ef" , padding:5}}>
+            {translate("yourcurrentstatus")}
+            </Text>
+          </View>
+        )}
+
+
         <Text style={{ fontSize: 16, color: "white" }}>
           {decodeHTMLEntities(item.description || "No Description")}
         </Text>
@@ -99,7 +109,7 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
             fontWeight: "bold",
           }}
         >
-          Status
+          {translate("status")}
         </Text>
         <TouchableOpacity onPress={goBack}>
           <Image

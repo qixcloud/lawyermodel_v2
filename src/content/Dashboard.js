@@ -128,7 +128,6 @@ export default class Dashboard extends Component {
     }
   };
   async componentDidMount() {
-    this.getConversation();
     this.getSliderItems();
 
     const projectIdJson = await AsyncStorage.getItem("projectId");
@@ -256,61 +255,72 @@ export default class Dashboard extends Component {
     });
   };
   getSliderItems = async () => {
-    const dashboardData = await getDashboardItems();
-    const customDashboardData = await getCustomDashboardItems();
-    this.setState({ sliderItems: dashboardData.sliders.data[global.lang] });
-    this.setState({ customDashboardItems: customDashboardData });
-    console.log("dashboardData", dashboardData);
-    console.log("customDashboardData", customDashboardData)
-    ;
-    this.setState({ DashboardItems: dashboardData });
-    this.setState({ colorTop: dashboardData.colors.top });
-    this.setState({ colorBody: dashboardData.colors.body });
-    this.setState({ colorBottom: dashboardData.colors.bottom });
-    this.setState({
-      logo: dashboardData.icons.app,
-    });
-    console.log(dashboardData.icons.app);
-    this.setState({
-      userAvatar: dashboardData.icons.userAvatar,
-    });
-    this.setState({
-      bottomVisible: dashboardData.bottomVisible,
-    });
-    console.log("bottomVisible", dashboardData.bottomVisible);
-    this.setState({
-      footerIcon1: dashboardData.icons.footerIcon1,
-    });
-    this.setState({
-      footerIcon2: dashboardData.icons.footerIcon2,
-    });
-    this.setState({
-      footerIcon3: dashboardData.icons.footerIcon3,
-    });
-    this.setState({ businessAddress: dashboardData.business_address });
-    this.setState({ businessEmail: dashboardData.business_email });
-    this.setState({ businessPhone: dashboardData.business_phone });
-    this.setState({ fb: dashboardData.business_facebook });
-    // this.setState({ twitter: dashboardData.twitter });
-    this.setState({ insta: dashboardData.business_instagram });
-    // this.setState({ youtube: dashboardData.youtube });
-    // this.setState({ linkedin: dashboardData.linkedin });
+    try {
+      const dashboardData = await getDashboardItems();
+      const customDashboardData = await getCustomDashboardItems();
 
-    // if (global.lang === "en") {
-    //   const data = [
-    //     require("../assets/sliders/home/Artboard1.jpg"),
-    //     require("../assets/sliders/home/Artboard2.jpg"),
-    //     require("../assets/sliders/home/Artboard3.jpg"),
-    //   ];
-    //   this.setState({ sliderItems: data });
-    // } else {
-    //   const data = [
-    //     require("../assets/sliders/home/Artboard1_es.jpg"),
-    //     require("../assets/sliders/home/Artboard2_es.jpg"),
-    //     require("../assets/sliders/home/Artboard3_es.jpg"),
-    //   ];
-    //   this.setState({ sliderItems: data });
-    // }
+      const jwt = await AsyncStorage.getItem("jwtToken");
+      const conversationResponse = await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        },
+        url: "https://api.qix.cloud/conversation"
+      });
+      console.log('debuggin conversationresponse',conversationResponse)
+      let rawPhase = "";
+      if (conversationResponse?.data?.caseFileIdsMetaMap) {
+        const firstCaseFileId = Object.keys(conversationResponse.data.caseFileIdsMetaMap)[0];
+        rawPhase = conversationResponse.data.caseFileIdsMetaMap[firstCaseFileId]?.phase || "";
+      }
+
+      const statusItems = customDashboardData || dashboardData.status[global.lang] || [];
+      const formattedStatus = statusItems.map(item => {
+        const languageData = item.languages?.[global.lang] || item.languages?.['en'] || {};
+        return {
+          title: languageData.phase || item.title || "",
+          description: languageData.description || item.description || "",
+          order: item.order || 0,
+          type: item.type || "",
+          phase: item.phase || "",
+        };
+      });
+
+      const translatedStatus = formattedStatus.find(item => item.phase === rawPhase);
+      const translatedPhase = translatedStatus?.title || rawPhase;
+      console.log('IMPORTANT translatedPhase',translatedPhase)
+      console.log('IMPORTANT rawPhase',rawPhase)
+
+      // Actualizar estados
+      this.setState({
+        sliderItems: dashboardData.sliders.data[global.lang],
+        customDashboardItems: customDashboardData,
+        DashboardItems: dashboardData,
+        currentPhase: translatedPhase,
+        rawPhase: rawPhase,
+        colorTop: dashboardData.colors.top,
+        colorBody: dashboardData.colors.body,
+        colorBottom: dashboardData.colors.bottom,
+        logo: dashboardData.icons.app,
+        userAvatar: dashboardData.icons.userAvatar,
+        bottomVisible: dashboardData.bottomVisible,
+        footerIcon1: dashboardData.icons.footerIcon1,
+        footerIcon2: dashboardData.icons.footerIcon2,
+        footerIcon3: dashboardData.icons.footerIcon3,
+        businessAddress: dashboardData.business_address,
+        businessEmail: dashboardData.business_email,
+        businessPhone: dashboardData.business_phone,
+        fb: dashboardData.business_facebook,
+        insta: dashboardData.business_instagram,
+      });
+
+      console.log("dashboardData", dashboardData);
+      console.log("customDashboardData", customDashboardData);
+      console.log("currentPhase", translatedPhase);
+
+    } catch (error) {
+      console.error("Error en getSliderItems:", error);
+    }
   };
 
   gotoPage = (page) => {
@@ -644,31 +654,6 @@ export default class Dashboard extends Component {
         </ImageBackground>
       </TouchableOpacity>
     );
-  };
-  getConversation = async () => {
-    try {
-      const jwt = await AsyncStorage.getItem("jwtToken");
-      const response = await axios({
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        },
-        url: "https://api.qix.cloud/conversation"
-      });
-
-      console.log("Conversation response:", response.data);
-
-      if (response?.data?.caseFileIdsMetaMap) {
-        const firstCaseFileId = Object.keys(response.data.caseFileIdsMetaMap)[0];
-        const phase = response.data.caseFileIdsMetaMap[firstCaseFileId]?.phase;
-
-        console.log("Phase found:", phase);
-        this.setState({ currentPhase: phase || "" });
-      }
-
-    } catch (error) {
-      console.error("Error getting conversation:", error);
-    }
   };
 
   render() {
@@ -1065,6 +1050,7 @@ export default class Dashboard extends Component {
                                     goBack={this.gotoHome}
                                     translate={this.props.translate}
                                     currentPhase={this.state.currentPhase}
+                                    rawPhase={this.state.rawPhase}
                                     status={
                                       this.state.customDashboardItems || this.state.DashboardItems.status[
                                           global.lang
@@ -1300,6 +1286,7 @@ export default class Dashboard extends Component {
                           <BlockStatus
                             currentPhase={this.state.currentPhase}
                             status={this.state.customDashboardItems ?? section[global.lang]}
+                            translate={this.props.translate}
                             onStatusPress={() => {
                               this.setState({
                                 appoType: "status",
