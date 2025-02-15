@@ -789,7 +789,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qixcloud.lawyermodel;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qixcloud.hyndmanApp;
 				PRODUCT_NAME = qix;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -818,7 +818,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.qixcloud.lawyermodel;
+				PRODUCT_BUNDLE_IDENTIFIER = com.qixcloud.hyndmanApp;
 				PRODUCT_NAME = qix;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
