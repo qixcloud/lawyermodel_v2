@@ -98,7 +98,7 @@ export default class SplashScreen extends Component {
   }
   componentDidMount = () => {
     setTimeout(() => {
-      this.layerSwitch();
+      this.setSwitch();
     }, 500);
     RNLocalize.addEventListener("change", this.handleLocalizationChange);
     // FingerprintScanner.isSensorAvailable()

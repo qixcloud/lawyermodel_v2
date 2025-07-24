@@ -1,7 +1,6 @@
 package com.qixcloud.hyndmanApp;
 
 import android.app.Application;
-import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -12,6 +11,12 @@ import com.facebook.soloader.SoLoader;
 import com.qixcloud.hyndmanApp.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.Context;
+import android.content.IntentFilter;
+import android.os.Build;
+import org.jetbrains.annotations.Nullable;
 
 import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.bridge.JSIModulePackage; // <- add
@@ -55,6 +60,16 @@ public class MainApplication extends Application implements ReactApplication {
       return mReactNativeHost;
     }
   }
+  @Override
+  public Intent registerReceiver(@Nullable BroadcastReceiver receiver, IntentFilter filter) {
+    if (Build.VERSION.SDK_INT >= 34 && getApplicationInfo().targetSdkVersion >= 34) {
+      return super.registerReceiver(receiver, filter, Context.RECEIVER_EXPORTED);
+    } else {
+      return super.registerReceiver(receiver, filter);
+    }
+  }
+
+
 
   @Override
   public void onCreate() {

@@ -264,6 +264,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation project(':react-native-bootsplash')
+    implementation 'org.jetbrains:annotations:16.0.2'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation("androidx.core:core-splashscreen:1.0.0") // Add this line
