@@ -145,23 +145,28 @@ const blobToBase64 = (blob) => {
   });
 };
 export const getDashboardItems = async () => {
-  const response = await axios.post(
-    "https://qix.cloud/ajax/app_new.php",
-    {
-      appId: appId,
-    },
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  try {
+    const response = await axios.post(
+        "https://qix.cloud/ajax/app_new.php",
+        {
+          appId: appId,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+    );
+    console.log('important response.data',response.data)
+    return response.data;
+  }catch (error) {
+    console.log('error getDashboardItems',error);
+  }
 
-  console.log('important response.data',response.data)
-  return response.data;
 };
 
 export const getCustomDashboardItems = async () => {
+try {
   const jwt = await AsyncStorage.getItem("jwtToken");
 
   const conversationResponse = await axios({
@@ -199,10 +204,10 @@ export const getCustomDashboardItems = async () => {
     }
   }
 
-  console.log('FileVine data:', fileVineData);
-  console.log('MerusCase data:', merusCaseData);
-
   return merusCaseData ?? fileVineData;
+}catch (e) {
+  console.log('error en getCustomDashboardItems',e)
+}
 };
 
 export const getHeaders = async () => {

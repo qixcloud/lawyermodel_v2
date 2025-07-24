@@ -260,13 +260,17 @@ export default class Dashboard extends Component {
       const customDashboardData = await getCustomDashboardItems();
 
       const jwt = await AsyncStorage.getItem("jwtToken");
-      const conversationResponse = await axios({
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        },
-        url: "https://api.qix.cloud/conversation"
-      });
+      let conversationResponse = undefined
+      if(jwt){
+         conversationResponse = await axios({
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          },
+          url: "https://api.qix.cloud/conversation"
+        });
+      }
+
       console.log('debuggin conversationresponse',conversationResponse)
       let rawPhase = "";
       if (conversationResponse?.data?.caseFileIdsMetaMap) {
