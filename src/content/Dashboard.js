@@ -40,7 +40,7 @@ import { BlurView } from "@react-native-community/blur";
 import Status from "./screens/Status";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ImageOrSvg from "./dashboardBlocks/imageOrSvg";
-import { appId, getHeaders, getDashboardItems } from "./Helper";
+import { appId, getHeaders, getDashboardItems , getCustomDashboardItems} from "./Helper";
 import BlockSlider from "./dashboardBlocks/slider";
 import BlockStatus from "./dashboardBlocks/status";
 import BlockPosts from "./dashboardBlocks/posts";
@@ -106,6 +106,7 @@ export default class Dashboard extends Component {
       colorBottom: "#a8c6f5",
       logoLoaded: false,
       currentPhase: "",
+      status: []
     };
     this.sheetRef = React.createRef();
     this.getBadgeCount();
@@ -127,7 +128,6 @@ export default class Dashboard extends Component {
     }
   };
   async componentDidMount() {
-    await this.getConversation();
     this.getSliderItems();
 
     const projectIdJson = await AsyncStorage.getItem("projectId");
@@ -226,6 +226,7 @@ export default class Dashboard extends Component {
         url: "https://api.qix.cloud/conversation",
       });
 
+      console.log('important response',response)
       if (response?.data?.intake_complete) {
         this.setState({ intake_complete: res.data.intake_complete });
       }
@@ -254,58 +255,76 @@ export default class Dashboard extends Component {
     });
   };
   getSliderItems = async () => {
-    const dashboardData = await getDashboardItems();
-    this.setState({ sliderItems: dashboardData.sliders.data[global.lang] });
-    console.log("dashboardData", dashboardData);
-    
-    this.setState({ DashboardItems: dashboardData });
-    this.setState({ colorTop: dashboardData.colors.top });
-    this.setState({ colorBody: dashboardData.colors.body });
-    this.setState({ colorBottom: dashboardData.colors.bottom });
-    this.setState({
-      logo: dashboardData.icons.app,
-    });
-    console.log(dashboardData.icons.app);
-    this.setState({
-      userAvatar: dashboardData.icons.userAvatar,
-    });
-    this.setState({
-      bottomVisible: dashboardData.bottomVisible,
-    });
-    console.log("bottomVisible", dashboardData.bottomVisible);
-    this.setState({
-      footerIcon1: dashboardData.icons.footerIcon1,
-    });
-    this.setState({
-      footerIcon2: dashboardData.icons.footerIcon2,
-    });
-    this.setState({
-      footerIcon3: dashboardData.icons.footerIcon3,
-    });
-    this.setState({ businessAddress: dashboardData.business_address });
-    this.setState({ businessEmail: dashboardData.business_email });
-    this.setState({ businessPhone: dashboardData.business_phone });
-    this.setState({ fb: dashboardData.business_facebook });
-    // this.setState({ twitter: dashboardData.twitter });
-    this.setState({ insta: dashboardData.business_instagram });
-    // this.setState({ youtube: dashboardData.youtube });
-    // this.setState({ linkedin: dashboardData.linkedin });
+    try {
+      const dashboardData = await getDashboardItems();
+      const customDashboardData = await getCustomDashboardItems();
 
-    // if (global.lang === "en") {
-    //   const data = [
-    //     require("../assets/sliders/home/Artboard1.jpg"),
-    //     require("../assets/sliders/home/Artboard2.jpg"),
-    //     require("../assets/sliders/home/Artboard3.jpg"),
-    //   ];
-    //   this.setState({ sliderItems: data });
-    // } else {
-    //   const data = [
-    //     require("../assets/sliders/home/Artboard1_es.jpg"),
-    //     require("../assets/sliders/home/Artboard2_es.jpg"),
-    //     require("../assets/sliders/home/Artboard3_es.jpg"),
-    //   ];
-    //   this.setState({ sliderItems: data });
-    // }
+      const jwt = await AsyncStorage.getItem("jwtToken");
+      let conversationResponse = undefined
+      if(jwt){
+         conversationResponse = await axios({
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          },
+          url: "https://api.qix.cloud/conversation"
+        });
+      }
+
+      console.log('debuggin conversationresponse',conversationResponse)
+      let rawPhase = "";
+      if (conversationResponse?.data?.caseFileIdsMetaMap) {
+        const firstCaseFileId = Object.keys(conversationResponse.data.caseFileIdsMetaMap)[0];
+        rawPhase = conversationResponse.data.caseFileIdsMetaMap[firstCaseFileId]?.phase || "";
+      }
+
+      const statusItems = customDashboardData || dashboardData.status[global.lang] || [];
+      const formattedStatus = statusItems.map(item => {
+        const languageData = item.languages?.[global.lang] || item.languages?.['en'] || {};
+        return {
+          title: languageData.phase || item.title || "",
+          description: languageData.description || item.description || "",
+          order: item.order || 0,
+          type: item.type || "",
+          phase: item.phase || "",
+        };
+      });
+
+      const translatedStatus = formattedStatus.find(item => item.phase === rawPhase);
+      const translatedPhase = translatedStatus?.title || rawPhase;
+      console.log('IMPORTANT translatedPhase',translatedPhase)
+      console.log('IMPORTANT rawPhase',rawPhase)
+
+      // Actualizar estados
+      this.setState({
+        sliderItems: dashboardData.sliders.data[global.lang],
+        customDashboardItems: customDashboardData,
+        DashboardItems: dashboardData,
+        currentPhase: translatedPhase,
+        rawPhase: rawPhase,
+        colorTop: dashboardData.colors.top,
+        colorBody: dashboardData.colors.body,
+        colorBottom: dashboardData.colors.bottom,
+        logo: dashboardData.icons.app,
+        userAvatar: dashboardData.icons.userAvatar,
+        bottomVisible: dashboardData.bottomVisible,
+        footerIcon1: dashboardData.icons.footerIcon1,
+        footerIcon2: dashboardData.icons.footerIcon2,
+        footerIcon3: dashboardData.icons.footerIcon3,
+        businessAddress: dashboardData.business_address,
+        businessEmail: dashboardData.business_email,
+        businessPhone: dashboardData.business_phone,
+        fb: dashboardData.business_facebook,
+        insta: dashboardData.business_instagram,
+      });
+
+      console.log("dashboardData", dashboardData);
+      console.log("customDashboardData", customDashboardData);
+      console.log("currentPhase", translatedPhase);
+
+    } catch (error) {
+      console.error("Error en getSliderItems:", error);
+    }
   };
 
   gotoPage = (page) => {
@@ -639,31 +658,6 @@ export default class Dashboard extends Component {
         </ImageBackground>
       </TouchableOpacity>
     );
-  };
-  getConversation = async () => {
-    try {
-      const jwt = await AsyncStorage.getItem("jwtToken");
-      const response = await axios({
-        method: "get", 
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        },
-        url: "https://api.qix.cloud/conversation"
-      });
-
-      console.log("Conversation response:", response.data);
-
-      if (response?.data?.caseFileIdsMetaMap) {
-        const firstCaseFileId = Object.keys(response.data.caseFileIdsMetaMap)[0];
-        const phase = response.data.caseFileIdsMetaMap[firstCaseFileId]?.phase;
-        
-        console.log("Phase found:", phase);
-        this.setState({ currentPhase: phase || "" });
-      }
-
-    } catch (error) {
-      console.error("Error getting conversation:", error);
-    }
   };
 
   render() {
@@ -1060,10 +1054,11 @@ export default class Dashboard extends Component {
                                     goBack={this.gotoHome}
                                     translate={this.props.translate}
                                     currentPhase={this.state.currentPhase}
+                                    rawPhase={this.state.rawPhase}
                                     status={
-                                      this.state.DashboardItems.status[
-                                        global.lang
-                                      ]
+                                      this.state.customDashboardItems || this.state.DashboardItems.status[
+                                          global.lang
+                                          ]
                                     }
                                   />
                                 ) : (
@@ -1294,7 +1289,8 @@ export default class Dashboard extends Component {
                         {section.content == "status" && (
                           <BlockStatus
                             currentPhase={this.state.currentPhase}
-                            status={section[global.lang]}
+                            status={this.state.customDashboardItems ?? section[global.lang]}
+                            translate={this.props.translate}
                             onStatusPress={() => {
                               this.setState({
                                 appoType: "status",

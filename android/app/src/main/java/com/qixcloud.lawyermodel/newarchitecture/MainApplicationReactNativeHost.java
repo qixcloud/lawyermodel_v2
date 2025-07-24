@@ -1,4 +1,4 @@
-package com.qixcloud.lawyermodel.newarchitecture;
+package com.qixcloud.hyndmanApp.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.qixcloud.lawyermodel.BuildConfig;
-import com.qixcloud.lawyermodel.newarchitecture.components.MainComponentsRegistry;
-import com.qixcloud.lawyermodel.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.qixcloud.hyndmanApp.BuildConfig;
+import com.qixcloud.hyndmanApp.newarchitecture.components.MainComponentsRegistry;
+import com.qixcloud.hyndmanApp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

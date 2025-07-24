@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
   Image,
   Dimensions,
   Platform,
@@ -12,35 +11,84 @@ import {
 
 const { width } = Dimensions.get("window");
 
-const Status = ({ goBack, translate, status, currentPhase }) => {
-  // Encontrar el índice que corresponde al phase actual
-  const initialIndex = status.findIndex(s => s.title === currentPhase);
+const decodeHTMLEntities = (text) => {
+  return text
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/<\/?p>/g, '\n')
+    .replace(/<\/?[^>]+(>|$)/g, '');
+};
+
+const Status = ({ goBack, translate, status, currentPhase,rawPhase }) => {
+  const formattedStatus = status?.map(item => {
+    const languageData = item.languages?.[global.lang] || item.languages?.['en'] || {};
+    return {
+      title: languageData.phase || item.title || "",
+      description: languageData.description || item.description || "",
+      order: item.order || 0,
+      type: item.type || "",
+      phase: item.phase || "",
+    };
+  }) || [];
+
+  const sortedStatus = formattedStatus.sort((a, b) => a.order - b.order);
+
+  const initialIndex = sortedStatus.findIndex(s => s.phase === rawPhase);
+  console.log("debugging sortedStatus", sortedStatus);
+  console.log("debugging initialIndex", initialIndex);
+  console.log("debugging currentPhase", currentPhase);
+
   const [currentIndex, setCurrentIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
 
-  console.log('status from screen status.js', status);
-  console.log('current phase:', currentPhase);
-  console.log('initial index:', initialIndex);
-
   const renderItem = (item) => (
-    <View
-      style={{
-        width,
-        alignItems: "flex-start",
-        paddingRight: 20,
-        paddingLeft: 20,
-      }}
+    <ScrollView
+      style={{ width }}
+      showsVerticalScrollIndicator={false}
     >
-      <Text style={{ fontSize: 24, color: "#2d96ef", marginBottom: 20 }}>
-        {item.title}
-      </Text>
-      <Text style={{ fontSize: 16, color: "white" }}>{item.description}</Text>
-    </View>
+      <View
+        style={{
+          alignItems: "flex-start",
+          paddingRight: 20,
+          paddingLeft: 20,
+          paddingBottom: 20,
+        }}
+      >
+        <Text style={{ fontSize: 24, color: "#2d96ef", marginBottom: 20 }}>
+          {decodeHTMLEntities(item.title || "No Title")}
+        </Text>
+        {initialIndex === currentIndex && (
+          <View style={{borderColor:'#2d96ef', borderWidth:1, borderRadius:5, justifyContent: "center"}}>
+            <Text style={{ fontSize: 16, color: "#2d96ef" , padding:5}}>
+            {translate("yourcurrentstatus")}
+            </Text>
+          </View>
+        )}
+
+
+        <Text style={{ fontSize: 16, color: "white" }}>
+          {decodeHTMLEntities(item.description || "No Description")}
+        </Text>
+      </View>
+    </ScrollView>
   );
 
   const handleScroll = (event) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / width);
     setCurrentIndex(index);
   };
+
+  if (!sortedStatus.length) {
+    return (
+      <View style={{ flex: 1, backgroundColor: "#2e3643", justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ color: "white", fontSize: 18 }}>No status information available</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: "#2e3643" }}>
@@ -61,7 +109,7 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
             fontWeight: "bold",
           }}
         >
-          Status
+          {translate("status")}
         </Text>
         <TouchableOpacity onPress={goBack}>
           <Image
@@ -82,7 +130,7 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
           marginVertical: 35,
         }}
       >
-        {status.map((_, index) => (
+        {sortedStatus.map((_, index) => (
           <View
             key={index}
             style={{
@@ -101,15 +149,17 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
         ))}
       </View>
 
-      <ScrollView
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-        pagingEnabled
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {renderItem(status[currentIndex])}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        >
+          {renderItem(sortedStatus[currentIndex])}
+        </ScrollView>
+      </View>
 
       <View
         style={{
@@ -140,10 +190,10 @@ const Status = ({ goBack, translate, status, currentPhase }) => {
           <View />
         )}
 
-        {currentIndex < status.length - 1 ? (
+        {currentIndex < sortedStatus.length - 1 ? (
           <TouchableOpacity
             onPress={() => {
-              if (currentIndex < status.length - 1) {
+              if (currentIndex < sortedStatus.length - 1) {
                 setCurrentIndex(currentIndex + 1);
               }
             }}

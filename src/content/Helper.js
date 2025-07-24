@@ -145,36 +145,71 @@ const blobToBase64 = (blob) => {
   });
 };
 export const getDashboardItems = async () => {
+  try {
+    const response = await axios.post(
+        "https://qix.cloud/ajax/app_new.php",
+        {
+          appId: appId,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+    );
+    console.log('important response.data',response.data)
+    return response.data;
+  }catch (error) {
+    console.log('error getDashboardItems',error);
+  }
+
+};
+
+export const getCustomDashboardItems = async () => {
+try {
   const jwt = await AsyncStorage.getItem("jwtToken");
-  const response2 = await axios({
-    method: "get", 
+
+  const conversationResponse = await axios({
+    method: "get",
     headers: {
       Authorization: `Bearer ${jwt}`
     },
-    url: "https://api.qix.cloud/phaseFileVine"
-  });
-  
-  const response3 = await axios({
-    method: "get", 
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
-    url: "https://api.qix.cloud/phaseMerusCase"
+    url: "https://api.qix.cloud/conversation"
   });
 
-  const response = await axios.post(
-    "https://qix.cloud/ajax/app_new.php",
-    {
-      appId: appId,
-    },
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  let fileVineData = null;
+  let merusCaseData = null;
+
+  if (conversationResponse.data?.advanced) {
+    if (conversationResponse.data.advanced.fileVineProjectIds?.length > 0) {
+      const fileVineResponse = await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        },
+        url: "https://api.qix.cloud/phaseFileVine"
+      });
+      fileVineData = fileVineResponse.data;
     }
-  );
-  return response.data;
+
+    if (conversationResponse.data.advanced.caseFileIds?.length > 0) {
+      const merusCaseResponse = await axios({
+        method: "get",
+        headers: {
+          Authorization: `Bearer ${jwt}`
+        },
+        url: "https://api.qix.cloud/phaseMerusCase"
+      });
+      merusCaseData = merusCaseResponse.data;
+    }
+  }
+
+  return merusCaseData ?? fileVineData;
+}catch (e) {
+  console.log('error en getCustomDashboardItems',e)
+}
 };
+
 export const getHeaders = async () => {
   const date = new Date();
   date.setMilliseconds(511);

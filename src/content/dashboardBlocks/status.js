@@ -18,6 +18,7 @@ export default class BlockStatus extends Component {
 
   render() {
       console.log('status from status.js',this.props.status);
+      console.log('currentPhase from status.js',this.props.currentPhase);
 
       return (
       <View style={{ marginVertical: 15, marginHorizontal: 25 }}>
@@ -58,7 +59,7 @@ export default class BlockStatus extends Component {
                     fontWeight: "bold",
                   }}
                 >
-                  {this.props.currentPhase}
+                  {this.props.currentPhase || this.props.status.title}
                 </Text>
                 <Text
                   style={{
@@ -67,7 +68,7 @@ export default class BlockStatus extends Component {
                     marginTop: 6,
                   }}
                 >
-                  {this.props.status.text}
+                    {this.props.translate("clicktolearnmore")}
                 </Text>
               </View>
               <View style={{ flex: 1 }}>

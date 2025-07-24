@@ -54,7 +54,7 @@
 			<key>entitlements</key>
 			<dict>
 				<key>application-identifier</key>
-				<string>W8Z6FSP54H.com.qixcloud.lawyermodel</string>
+				<string>W8Z6FSP54H.com.qixcloud.hyndmanApp</string>
 				<key>aps-environment</key>
 				<string>development</string>
 				<key>com.apple.developer.in-app-payments</key>
@@ -73,7 +73,7 @@
 				<key>dateExpires</key>
 				<string>5/6/24</string>
 				<key>name</key>
-				<string>iOS Team Provisioning Profile: com.qixcloud.lawyermodel</string>
+				<string>iOS Team Provisioning Profile: com.qixcloud.hyndmanApp</string>
 			</dict>
 			<key>team</key>
 			<dict>

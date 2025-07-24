@@ -404,9 +404,6 @@ export default class Signup extends Component {
       // }
     };
 
-    handleCodeFilled = (code) => {
-      this.setState({ checkVerifyTxt: code });
-    };
     return (
       <>
         {this.state.back === 1 ? <SplashScreen /> : <></>}
@@ -517,7 +514,7 @@ export default class Signup extends Component {
                           marginBottom: 30,
                         }}
                       >
-                        <ConfirmInput onCodeFilled={this.handleCodeFilled} />
+                        <ConfirmInput onCodeFilled={(text)=>{this.setState({ checkVerifyTxt: text });}} />
                       </View>
                       <View
                         style={{

@@ -1,107 +1,40 @@
 {
   "project_info": {
-    "project_number": "1064213150621",
-    "firebase_url": "https://qixcloud-265bc.firebaseio.com",
-    "project_id": "qixcloud-265bc",
-    "storage_bucket": "qixcloud-265bc.appspot.com"
+    "project_number": "744619556853",
+    "project_id": "lawyermodel-520a1",
+    "storage_bucket": "lawyermodel-520a1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1064213150621:android:362de4ed05bf00fe764d74",
-        "android_client_info": {
-          "package_name": "com.legalpal.www"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1064213150621-hu10m5bmsquili6u3g6v58iv8ql7q3u7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.legalpal.www",
-            "certificate_hash": "6ca63deb3f7d0eab1d12cc9373ed58b566430269"
-          }
-        },
-        {
-          "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCaJhkS0-PHRbBLWYvbRy-FDcc4ToZebh4"
-        },
-        {
-          "current_key": "AIzaSyBsCQkLdxEsc8hY4-lsbCoH30H5BZvvkhY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1064213150621-1dk6cls1lk5nacqbdc3761prjhqhggfm.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.qixcloud.lawyermodel"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1064213150621:android:5a3a2b53f63a9ac1764d74",
+        "mobilesdk_app_id": "1:744619556853:android:a658dea5c03c9e14946abc",
         "android_client_info": {
           "package_name": "com.qixcloud.hyndman"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1064213150621-3ivhasqnn2sld71ofe0clirnuaapb6f1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.qixcloud.hyndman",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "1064213150621-cjo2pbu50jrha8us6j2tss70ut7npper.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.qixcloud.hyndman",
-            "certificate_hash": "fe715bfbc2980cee29146195371dd54b057ead58"
-          }
-        },
-        {
-          "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCaJhkS0-PHRbBLWYvbRy-FDcc4ToZebh4"
-        },
-        {
-          "current_key": "AIzaSyBsCQkLdxEsc8hY4-lsbCoH30H5BZvvkhY"
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1064213150621-1dk6cls1lk5nacqbdc3761prjhqhggfm.apps.googleusercontent.com",
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.qixcloud.lawyermodel"
+                "bundle_id": "com.qixcloud.lawyermodel1"
               }
             }
           ]
@@ -110,76 +43,70 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1064213150621:android:9d17d8b56918e70a764d74",
+        "mobilesdk_app_id": "1:744619556853:android:2c083820f051b755946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.hyndmanApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:a13abad25aeabffe946abc",
         "android_client_info": {
           "package_name": "com.qixcloud.lawyermodel"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCaJhkS0-PHRbBLWYvbRy-FDcc4ToZebh4"
-        },
-        {
-          "current_key": "AIzaSyBsCQkLdxEsc8hY4-lsbCoH30H5BZvvkhY"
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1064213150621-1dk6cls1lk5nacqbdc3761prjhqhggfm.apps.googleusercontent.com",
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.qixcloud.lawyermodel"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1064213150621:android:2cbec876de1a81ff764d74",
-        "android_client_info": {
-          "package_name": "com.qixcloud.lyfelaw"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCaJhkS0-PHRbBLWYvbRy-FDcc4ToZebh4"
-        },
-        {
-          "current_key": "AIzaSyBsCQkLdxEsc8hY4-lsbCoH30H5BZvvkhY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1064213150621-b3tanm0plagm3eoj7sv7tdg3ut4n47gf.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "1064213150621-1dk6cls1lk5nacqbdc3761prjhqhggfm.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.qixcloud.lawyermodel"
+                "bundle_id": "com.qixcloud.lawyermodel1"
               }
             }
           ]

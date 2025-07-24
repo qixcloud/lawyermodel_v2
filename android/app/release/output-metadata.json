@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.qixcloud.lawyermodel",
+  "applicationId": "com.qixcloud.hyndmanApp",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 20,
-      "versionName": "2.1.0",
+      "versionCode": 24,
+      "versionName": "2.2.4",
       "outputFile": "app-release.apk"
     }
   ],
