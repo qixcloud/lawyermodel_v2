@@ -7,7 +7,151 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:744619556853:android:a658dea5c03c9e14946abc",
+        "mobilesdk_app_id": "1:744619556853:android:30ea32551f81c7fe946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.bledsoelaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:9f81da22cc027ff8946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.christinalopezlaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:c70e50d5677ca680946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.diallaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:9ff54a0c3ad66e8c946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.farnsworthlaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:22a9d53f289fae0e946abc",
         "android_client_info": {
           "package_name": "com.qixcloud.humphrey"
         }
@@ -43,9 +187,45 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:a658dea5c03c9e14946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.hyndman"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:744619556853:android:2c083820f051b755946abc",
         "android_client_info": {
-          "package_name": "com.qixcloud.humphreyApp"
+          "package_name": "com.qixcloud.hyndmanApp"
         }
       },
       "oauth_client": [
@@ -82,6 +262,114 @@
         "mobilesdk_app_id": "1:744619556853:android:a13abad25aeabffe946abc",
         "android_client_info": {
           "package_name": "com.qixcloud.lawyermodel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:12024a76e9b9bd7b946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.mahoneylaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:6f582692c4243b0c946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.mendezsanchezlaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBGRlJR8qZTqNcWUYtEuRgayJNmEYErhk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744619556853-3tp97spjj4hqoceab39jkh93h9q61p1s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744619556853-c0rjacclq79qqrja4grjti6t2goehcg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qixcloud.lawyermodel1"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744619556853:android:f6f33cc819a1275e946abc",
+        "android_client_info": {
+          "package_name": "com.qixcloud.rattolawfirm"
         }
       },
       "oauth_client": [

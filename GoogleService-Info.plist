@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.qixcloud.humphreyApp</string>
+	<string>com.qixcloud.humphrey</string>
 	<key>PROJECT_ID</key>
 	<string>lawyermodel-520a1</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:744619556853:ios:86c03b361d02c386946abc</string>
+	<string>1:744619556853:ios:3d1b72d6e526c68f946abc</string>
 </dict>
 </plist>
