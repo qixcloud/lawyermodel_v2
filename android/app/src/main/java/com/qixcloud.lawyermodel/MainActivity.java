@@ -1,4 +1,4 @@
-package com.qixcloud.hyndmanApp;
+package com.qixcloud.humphreyApp;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -10,7 +10,7 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected String getMainComponentName() {
-    return "qixcloud.hyndman";
+    return "qixcloud.humphrey";
   }
 
   @Override

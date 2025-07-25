@@ -8,10 +8,9 @@ import ReactNativeBlobUtil from "react-native-blob-util";
 import RNFS from "react-native-fs";
 
 export const apiKey = "fvpk_400bd760-28f1-d5cb-ab2b-6e2838933169";
-export const apiSecret =
-  "fvsk_a53d25367d03ca01d4b66b707fbc9e623a51455f090c7c47db86e9ca24ef43c9";
+export const apiSecret = "fvsk_a53d25367d03ca01d4b66b707fbc9e623a51455f090c7c47db86e9ca24ef43c9";
 export const projectId = 156794;
-export const appId = "91d9a648e4f46b5ed9918f2276a8ccca";
+export const appId = "BC0HvnD7d1OCHhqPDqtH";
 
 export async function requestNotificationPermission() {
   if (Platform.OS === "ios") {
@@ -20,7 +19,7 @@ export async function requestNotificationPermission() {
 
   try {
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
     );
   } catch (err) {
     console.warn(err);
@@ -34,26 +33,26 @@ export async function requestCameraPermission() {
 
   try {
     await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      {
-        title: "Cool App Notification Permission",
-        message: "Cool App needs access to your Notification ",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK",
-      }
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        {
+          title: "Cool App Notification Permission",
+          message: "Cool App needs access to your Notification ",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
     );
     const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-      {
-        title: "Cool App Camera Permission",
-        message:
-          "Cool App needs access to your camera " +
-          "so you can take awesome pictures.",
-        buttonNeutral: "Ask Me Later",
-        buttonNegative: "Cancel",
-        buttonPositive: "OK",
-      }
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: "Cool App Camera Permission",
+          message:
+              "Cool App needs access to your camera " +
+              "so you can take awesome pictures.",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
     );
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
       console.log("You can use the camera");
@@ -166,48 +165,48 @@ export const getDashboardItems = async () => {
 };
 
 export const getCustomDashboardItems = async () => {
-try {
-  const jwt = await AsyncStorage.getItem("jwtToken");
+  try {
+    const jwt = await AsyncStorage.getItem("jwtToken");
 
-  const conversationResponse = await axios({
-    method: "get",
-    headers: {
-      Authorization: `Bearer ${jwt}`
-    },
-    url: "https://api.qix.cloud/conversation"
-  });
+    const conversationResponse = await axios({
+      method: "get",
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      },
+      url: "https://api.qix.cloud/conversation"
+    });
 
-  let fileVineData = null;
-  let merusCaseData = null;
+    let fileVineData = null;
+    let merusCaseData = null;
 
-  if (conversationResponse.data?.advanced) {
-    if (conversationResponse.data.advanced.fileVineProjectIds?.length > 0) {
-      const fileVineResponse = await axios({
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        },
-        url: "https://api.qix.cloud/phaseFileVine"
-      });
-      fileVineData = fileVineResponse.data;
+    if (conversationResponse.data?.advanced) {
+      if (conversationResponse.data.advanced.fileVineProjectIds?.length > 0) {
+        const fileVineResponse = await axios({
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          },
+          url: "https://api.qix.cloud/phaseFileVine"
+        });
+        fileVineData = fileVineResponse.data;
+      }
+
+      if (conversationResponse.data.advanced.caseFileIds?.length > 0) {
+        const merusCaseResponse = await axios({
+          method: "get",
+          headers: {
+            Authorization: `Bearer ${jwt}`
+          },
+          url: "https://api.qix.cloud/phaseMerusCase"
+        });
+        merusCaseData = merusCaseResponse.data;
+      }
     }
 
-    if (conversationResponse.data.advanced.caseFileIds?.length > 0) {
-      const merusCaseResponse = await axios({
-        method: "get",
-        headers: {
-          Authorization: `Bearer ${jwt}`
-        },
-        url: "https://api.qix.cloud/phaseMerusCase"
-      });
-      merusCaseData = merusCaseResponse.data;
-    }
+    return merusCaseData ?? fileVineData;
+  }catch (e) {
+    console.log('error en getCustomDashboardItems',e)
   }
-
-  return merusCaseData ?? fileVineData;
-}catch (e) {
-  console.log('error en getCustomDashboardItems',e)
-}
 };
 
 export const getHeaders = async () => {
@@ -217,19 +216,19 @@ export const getHeaders = async () => {
   const apiHash = crypto.MD5(`${apiKey}/${timestamp}/${apiSecret}`).toString();
 
   const sessionResponse = await axios.post(
-    "https://api.filevine.io/session",
-    {
-      mode: "key",
-      apiKey: apiKey,
-      apiHash: apiHash,
-      apiTimestamp: timestamp,
-    },
-    {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+      "https://api.filevine.io/session",
+      {
+        mode: "key",
+        apiKey: apiKey,
+        apiHash: apiHash,
+        apiTimestamp: timestamp,
       },
-    }
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
   );
   const accessToken = sessionResponse.data.accessToken;
   const refreshToken = sessionResponse.data.refreshToken;
@@ -249,29 +248,29 @@ export const getHeaders = async () => {
 };
 
 export async function createPDF(
-  dismissal,
-  incident_date,
-  inputName,
-  inputPhone,
-  inputEmail,
-  birthday,
-  inputEmployerName,
-  inputDateHired,
-  inputHoursWages,
-  inputPayStUBPicture,
-  inputGovIdPicture,
-  inputAddress,
-  inputAddress2,
-  inputCity,
-  inputZipCode
-) {
-  console.log(
-    "props",
     dismissal,
     incident_date,
     inputName,
     inputPhone,
-    inputEmail
+    inputEmail,
+    birthday,
+    inputEmployerName,
+    inputDateHired,
+    inputHoursWages,
+    inputPayStUBPicture,
+    inputGovIdPicture,
+    inputAddress,
+    inputAddress2,
+    inputCity,
+    inputZipCode
+) {
+  console.log(
+      "props",
+      dismissal,
+      incident_date,
+      inputName,
+      inputPhone,
+      inputEmail
   );
 
   const getImageBase64Html = async (imagePath) => {
@@ -314,23 +313,23 @@ export async function createPDF(
 }
 
 export const handleDocumentOperation = async (
-  fileName,
-  size,
-  uri,
-  projectId
+    fileName,
+    size,
+    uri,
+    projectId
 ) => {
   try {
     const headers = await getHeaders();
 
     const response = await axios.post(
-      `https://api.filevine.io/core/documents`,
-      {
-        filename: fileName,
-        size: size,
-      },
-      {
-        headers: headers,
-      }
+        `https://api.filevine.io/core/documents`,
+        {
+          filename: fileName,
+          size: size,
+        },
+        {
+          headers: headers,
+        }
     );
 
     const url = response?.data?.url;
@@ -338,7 +337,7 @@ export const handleDocumentOperation = async (
     const documentId = response?.data?.documentId.native;
 
     const existingDocuments = await AsyncStorage.getItem(
-      `allDocumentsId${projectId}`
+        `allDocumentsId${projectId}`
     );
     let allDocumentsId = [];
 
@@ -349,36 +348,36 @@ export const handleDocumentOperation = async (
     allDocumentsId.push(documentId);
 
     await AsyncStorage.setItem(
-      `allDocumentsId${projectId}`,
-      JSON.stringify(allDocumentsId)
+        `allDocumentsId${projectId}`,
+        JSON.stringify(allDocumentsId)
     );
 
     if (url) {
       await ReactNativeBlobUtil.fetch(
-        "PUT",
-        url,
-        {
-          "Content-Type": contentType,
-        },
-        ReactNativeBlobUtil.wrap(uri)
+          "PUT",
+          url,
+          {
+            "Content-Type": contentType,
+          },
+          ReactNativeBlobUtil.wrap(uri)
       );
 
       await axios.post(
-        `https://api.filevine.io/core/projects/${projectId}/documents/${documentId}`,
-        {
-          documentId: { Native: documentId },
-          filename: fileName,
-          size: size,
-          projectId: { Native: projectId },
-          uploadDate: new Date().toISOString(),
-          hashtags: ["doc"],
-        },
-        {
-          headers: {
-            ...headers,
-            "Content-Type": "application/json",
+          `https://api.filevine.io/core/projects/${projectId}/documents/${documentId}`,
+          {
+            documentId: { Native: documentId },
+            filename: fileName,
+            size: size,
+            projectId: { Native: projectId },
+            uploadDate: new Date().toISOString(),
+            hashtags: ["doc"],
           },
-        }
+          {
+            headers: {
+              ...headers,
+              "Content-Type": "application/json",
+            },
+          }
       );
 
       return true;
