@@ -1,4 +1,4 @@
-package com.qixcloud.humphreyApp.newarchitecture.modules;
+package com.qixcloud.humphreynew.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

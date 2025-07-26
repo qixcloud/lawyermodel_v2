@@ -1,4 +1,4 @@
-package com.qixcloud.humphreyApp.newarchitecture.components;
+package com.qixcloud.humphreynew.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

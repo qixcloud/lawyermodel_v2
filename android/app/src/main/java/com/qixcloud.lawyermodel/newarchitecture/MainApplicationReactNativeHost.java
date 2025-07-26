@@ -1,4 +1,4 @@
-package com.qixcloud.humphreyApp.newarchitecture;
+package com.qixcloud.humphreynew.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.qixcloud.humphreyApp.BuildConfig;
-import com.qixcloud.humphreyApp.newarchitecture.components.MainComponentsRegistry;
-import com.qixcloud.humphreyApp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.qixcloud.humphreynew.BuildConfig;
+import com.qixcloud.humphreynew.newarchitecture.components.MainComponentsRegistry;
+import com.qixcloud.humphreynew.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
