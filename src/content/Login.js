@@ -308,14 +308,18 @@ export default class Login extends Component {
         const conversationDataWithPlatform = resConversation.data;
         conversationDataWithPlatform.device = Platform.OS;
 
-        await axios({
-          method: "put",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-          url: "https://api.qix.cloud/conversation",
-          data: conversationDataWithPlatform,
-        });
+       try {
+         await axios({
+           method: "put",
+           headers: {
+             Authorization: `Bearer ${jwt}`,
+           },
+           url: "https://api.qix.cloud/conversation",
+           data: conversationDataWithPlatform,
+         });
+       } catch (e) {
+         console.log('error in PUT', e)
+       }
 
         const token = await messaging().getToken();
         console.log("TOKEN", token);
@@ -406,14 +410,18 @@ export default class Login extends Component {
                       conversationData.advanced.fileVineProjectIds = [
                         projectId,
                       ];
-                      await axios({
-                        method: "put",
-                        headers: {
-                          Authorization: `Bearer ${jwt}`,
-                        },
-                        url: "https://api.qix.cloud/conversation",
-                        data: conversationData,
-                      });
+                      try {
+                        await axios({
+                          method: "put",
+                          headers: {
+                            Authorization: `Bearer ${jwt}`,
+                          },
+                          url: "https://api.qix.cloud/conversation",
+                          data: conversationData,
+                        });
+                      } catch (e) {
+                        console.log('error in PUT', e);
+                      }
                       this.setState({ isDialogVisible: false });
                       this.setState({ sign: 1 });
 
