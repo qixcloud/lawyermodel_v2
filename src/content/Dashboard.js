@@ -273,7 +273,10 @@ export default class Dashboard extends Component {
 
       console.log('debuggin conversationresponse',conversationResponse)
       let rawPhase = "";
-      if (conversationResponse?.data?.caseFileIdsMetaMap) {
+      if (conversationResponse?.data?.fluentCaseMattersIdsMetaMap) {
+        const firstCaseFileId = Object.keys(conversationResponse.data.fluentCaseMattersIdsMetaMap)[0];
+        rawPhase = conversationResponse.data.fluentCaseMattersIdsMetaMap[firstCaseFileId]?.phase || "";
+      } else if (conversationResponse?.data?.caseFileIdsMetaMap) {
         const firstCaseFileId = Object.keys(conversationResponse.data.caseFileIdsMetaMap)[0];
         rawPhase = conversationResponse.data.caseFileIdsMetaMap[firstCaseFileId]?.phase || "";
       }
