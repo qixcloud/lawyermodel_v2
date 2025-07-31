@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:744619556853:android:a658dea5c03c9e14946abc",
         "android_client_info": {
-          "package_name": "com.qixcloud.hyndmanApp"
+          "package_name": "com.qixcloud.diallaw"
         }
       },
       "oauth_client": [
@@ -45,7 +45,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:744619556853:android:2c083820f051b755946abc",
         "android_client_info": {
-          "package_name": "com.qixcloud.hyndmanApp"
+          "package_name": "com.qixcloud.diallaw"
         }
       },
       "oauth_client": [

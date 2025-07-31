@@ -11,7 +11,7 @@ export const apiKey = "fvpk_400bd760-28f1-d5cb-ab2b-6e2838933169";
 export const apiSecret =
     "fvsk_a53d25367d03ca01d4b66b707fbc9e623a51455f090c7c47db86e9ca24ef43c9";
 export const projectId = 156794;
-export const appId = "91d9a648e4f46b5ed9918f2276a8ccca";
+export const appId = "08d25385dfa2178ae17d8901bdc7e8d6";
 
 export async function requestNotificationPermission() {
     if (Platform.OS === "ios") {

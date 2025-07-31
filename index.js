@@ -8,6 +8,6 @@ import App from "./App";
 import { name as appName } from "./app.json";
 
 AppRegistry.registerComponent(
-  Platform.OS === "android" ? "qixcloud.hyndmanApp" : appName,
+  Platform.OS === "android" ? "qixcloud.diallaw" : appName,
   () => App
 );

@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "postinstall": "patch-package",
     "android-prebuild": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && npm run android-cleanup-assets",
-    "android-cleanup-assets": "rmdir /s /q android\\app\\src\\main\\res\\drawable-hdpi android\\app\\src\\main\\res\\drawable-mdpi android\\app\\src\\main\\res\\drawable-xhdpi android\\app\\src\\main\\res\\drawable-xxhdpi android\\app\\src\\main\\res\\drawable-xxxhdpi"
+    "android-cleanup-assets": "rmdir /s /q android\\app\\src\\main\\res\\drawable-hdpi android\\app\\src\\main\\res\\drawable-mdpi android\\app\\src\\main\\res\\drawable-xhdpi android\\app\\src\\main\\res\\drawable-xxhdpi android\\app\\src\\main\\res\\drawable-xxxhdpi",
+    "generate-bootsplash": "react-native generate-bootsplash \"./src/content/images/logo.png\" --background-color=\"#EC1C24\""
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",

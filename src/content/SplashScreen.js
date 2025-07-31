@@ -73,7 +73,7 @@ export default class SplashScreen extends Component {
     global.lang = "en";
     global.baseUrl = "https://qix.cloud/lawyermodel/";
     global.mainUrl = "https://qix.cloud/lawyermodel/";
-    global.title = "Hyndman Law Firm";
+    global.title = "Dial Law Firm";
     global.logo = require("./logo.png");
     global.staffId = 0;
     global.staffName = "";

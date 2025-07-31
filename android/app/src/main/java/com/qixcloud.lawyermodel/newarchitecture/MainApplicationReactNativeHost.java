@@ -1,4 +1,4 @@
-package com.qixcloud.hyndmanApp.newarchitecture;
+package com.qixcloud.diallaw.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.qixcloud.hyndmanApp.BuildConfig;
-import com.qixcloud.hyndmanApp.newarchitecture.components.MainComponentsRegistry;
-import com.qixcloud.hyndmanApp.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.qixcloud.diallaw.BuildConfig;
+import com.qixcloud.diallaw.newarchitecture.components.MainComponentsRegistry;
+import com.qixcloud.diallaw.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
