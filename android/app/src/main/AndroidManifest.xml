@@ -25,6 +25,7 @@
       android:allowBackup="false"
       android:theme="@style/BootTheme"
       android:requestLegacyExternalStorage="true"
+      android:usesCleartextTraffic="true"
       android:windowSoftInputMode="adjustPan">
       <activity
         android:name=".MainActivity"

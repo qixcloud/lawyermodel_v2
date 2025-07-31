@@ -98,10 +98,11 @@ export default class Login extends Component {
 
   getSliderItems = async () => {
     const dashboardItems = await getDashboardItems();
+
     this.setState({ sliderItems: dashboardItems.sliders.data[global.lang] });
     this.setState({ colorTop: dashboardItems.colors.top });
     this.setState({ colorBody: dashboardItems.colors.body });
-
+    console.log('dashboardItems.icons.app',dashboardItems.icons.app)
     this.setState({
       logo: dashboardItems.icons.app,
     });
