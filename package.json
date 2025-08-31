@@ -12,7 +12,6 @@
     "android-prebuild": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && npm run android-cleanup-assets",
     "android-cleanup-assets": "rmdir /s /q android\\app\\src\\main\\res\\drawable-hdpi android\\app\\src\\main\\res\\drawable-mdpi android\\app\\src\\main\\res\\drawable-xhdpi android\\app\\src\\main\\res\\drawable-xxhdpi android\\app\\src\\main\\res\\drawable-xxxhdpi",
     "android-cleanup-assets-mac": "rm -rf android/app/src/main/res/drawable-hdpi android/app/src/main/res/drawable-mdpi android/app/src/main/res/drawable-xhdpi android/app/src/main/res/drawable-xxhdpi android/app/src/main/res/drawable-xxxhdpi"
-
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.5",
@@ -21,6 +20,7 @@
     "@react-native-community/blur": "^4.4.1",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/datetimepicker": "^6.7.1",
+    "@react-native-community/geolocation": "^3.4.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-community/progress-bar-android": "^1.0.3",
     "@react-native-firebase/app": "^16.4.2",
@@ -42,6 +42,7 @@
     "react": "^18.2.0",
     "react-elements": "^1.3.1",
     "react-native": "^0.70.6",
+    "react-native-accident-panel": "file:../react-native-accident-panel/react-native-accident-panel-1.0.0.tgz",
     "react-native-autogrow-input": "^0.2.1",
     "react-native-blob-util": "^0.17.3",
     "react-native-bootsplash": "^4.6.0",
@@ -68,6 +69,7 @@
     "react-native-mask-input": "^1.2.2",
     "react-native-modal": "^13.0.1",
     "react-native-pdf": "^6.6.2",
+    "react-native-permissions": "^5.4.2",
     "react-native-picker-select": "^7.0.0",
     "react-native-popup-dialog": "^0.18.3",
     "react-native-power-translator": "^1.1.1",
@@ -80,6 +82,7 @@
     "react-native-screens": "3.29.0",
     "react-native-search-filter": "^0.1.5",
     "react-native-searchable-picker": "^1.0.5",
+    "react-native-sensors": "^7.3.6",
     "react-native-shared-element": "^0.8.8",
     "react-native-signature-canvas": "^4.4.1",
     "react-native-snap-carousel": "^3.9.1",

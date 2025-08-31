@@ -16,6 +16,7 @@ target 'qix' do
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'RNBootSplash', :path => '../node_modules/react-native-bootsplash'
   pod 'react-native-blob-util', :path => '../node_modules/react-native-blob-util'
+  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
 
   use_react_native!(
     :path => config[:reactNativePath],

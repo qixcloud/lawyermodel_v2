@@ -47,7 +47,9 @@ import BlockPosts from "./dashboardBlocks/posts";
 import BlockBoxs from "./dashboardBlocks/twoBoxs";
 import BlockButton from "./dashboardBlocks/button";
 import * as Progress from "react-native-progress";
+import AccidentDetection from "./dashboardBlocks/accidentDetection";
 // import
+import { AccidentPanel } from "react-native-accident-panel";
 
 export default class Dashboard extends Component {
   constructor(props) {
@@ -328,10 +330,10 @@ export default class Dashboard extends Component {
   };
 
   gotoPage = (page) => {
-    const pages = ["chat", "app", "inbox", "questions", "glossary", "account"];
+    const pages = ["chat", "app", "inbox", "questions", "glossary", "account", "accidentDetection"];
     if (page != "") {
       //page = "chat";
-      haspage = pages.includes(page);
+      const haspage = pages.includes(page);
       if (haspage) {
         if (page == "account") {
           this.gotoMenuItem(6);
@@ -1064,6 +1066,9 @@ export default class Dashboard extends Component {
                                 ) : (
                                   <></>
                                 )}
+                                {this.state.appoType == 'accidentDetection' ? (
+                                    <AccidentPanel onClosePress={this.gotoBack}/>
+                                ) : null}
                                 {this.state.appoType == "inbox" ? (
                                   <View
                                     style={[
@@ -1274,6 +1279,7 @@ export default class Dashboard extends Component {
                     backgroundColor: this.state.colorBody,
                   }}
                 >
+                  <AccidentDetection translate={this.props.translate} onPress={()=> this.gotoPage('accidentDetection')} />
                   {this.state.DashboardItems?.sections &&
                     this.state.DashboardItems.sections.map((section, index) => (
                       <View key={index}>
@@ -1286,6 +1292,7 @@ export default class Dashboard extends Component {
                             gotoPage={this.gotoPage}
                           />
                         )}
+
                         {section.content == "status" && (
                           <BlockStatus
                             currentPhase={this.state.currentPhase}

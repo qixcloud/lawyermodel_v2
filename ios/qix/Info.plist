@@ -91,6 +91,10 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app requires access to the photo library.</string>
 	<key>UIAppFonts</key>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location to track your position in case of an accident.</string>
+    <key>NSMotionUsageDescription</key>
+    <string>We need access to your device's motion sensors to detect sudden movements, which can indicate an accident.</string>
 	<array>
 		<string>Quicksand-Regular.ttf</string>
 		<string>Quicksand-Bold.ttf</string>

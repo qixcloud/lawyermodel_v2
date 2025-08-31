@@ -1,98 +1,83 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import {
-  View,
-  Text,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  ImageBackground,
-  Image,
+    View,
+    TouchableOpacity,
+    ImageBackground,
+    StyleSheet,
 } from "react-native";
 
 export default class BlockBoxs extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    // console.log(this.props.boxs);
-  }
+    render() {
+        const { boxs, gotoPage } = this.props;
 
-  render() {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: 15,
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => this.props.gotoPage(this.props.boxs.link1)}
-          style={{
-            width: "50%",
-          }}
-        >
-          <ImageBackground
-            style={{
-              borderRadius: 10,
-              minHeight: 150,
-              padding: 20,
-              marginLeft: 10,
-              marginRight: 10,
-              justifyContent: "center",
-              alignItems: "flex-end",
-            }}
-            source={{
-              uri: this.props.boxs.image1.includes("http")
-                ? this.props.boxs.image1
-                : global.devUrl + this.props.boxs.image1,
-            }}
-            imageStyle={{ borderRadius: 10 }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                alignItems: "center",
-              }}
-            ></View>
-          </ImageBackground>
-        </TouchableOpacity>
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity
+                    onPress={() => gotoPage(boxs.link1)}
+                    style={styles.touchable}
+                >
+                    <ImageBackground
+                        style={styles.imageBackground}
+                        source={{
+                            uri: boxs.image1.includes("http")
+                                ? boxs.image1
+                                : global.devUrl + boxs.image1,
+                        }}
+                        imageStyle={styles.imageStyle}
+                    >
+                        <View style={styles.innerView}></View>
+                    </ImageBackground>
+                </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => this.props.gotoPage(this.props.boxs.link2)}
-          style={{
-            width: "50%",
-          }}
-        >
-          <ImageBackground
-            style={{
-              backgroundColor: "#b9d1d7",
-              borderRadius: 10,
-              minHeight: 150,
-              padding: 20,
-              marginLeft: 10,
-              marginRight: 10,
-              justifyContent: "center",
-              alignItems: "flex-end",
-            }}
-            source={{
-              uri: this.props.boxs.image2.includes("http")
-                ? this.props.boxs.image2
-                : global.devUrl + this.props.boxs.image2,
-            }}
-            imageStyle={{ borderRadius: 10 }}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                alignItems: "center",
-              }}
-            ></View>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+                <TouchableOpacity
+                    onPress={() => gotoPage(boxs.link2)}
+                    style={styles.touchable}
+                >
+                    <ImageBackground
+                        style={[styles.imageBackground, styles.imageBackgroundAlt]}
+                        source={{
+                            uri: boxs.image2.includes("http")
+                                ? boxs.image2
+                                : global.devUrl + boxs.image2,
+                        }}
+                        imageStyle={styles.imageStyle}
+                    >
+                        <View style={styles.innerView}></View>
+                    </ImageBackground>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        margin: 15,
+    },
+    touchable: {
+        width: "50%",
+    },
+    imageBackground: {
+        borderRadius: 10,
+        minHeight: 150,
+        padding: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        justifyContent: "center",
+        alignItems: "flex-end",
+    },
+    imageBackgroundAlt: {
+        backgroundColor: "#b9d1d7",
+    },
+    imageStyle: {
+        borderRadius: 10,
+    },
+    innerView: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "center",
+    },
+});
